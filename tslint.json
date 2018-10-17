@@ -1,0 +1,21 @@
+{
+  "extends": ["tslint-react", "tslint-config-airbnb", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
+  },
+  "rules": {
+    "jsx-boolean-value": false,
+    "import-name": false,
+    "import-blacklist": [
+      true
+    ],
+    "no-implicit-dependencies": true,
+    "no-this-assignment": [
+      true,
+      {
+        "allow-destructuring": true
+      }
+    ],
+    "variable-name": [true, "allow-pascal-case"]
+  }
+}

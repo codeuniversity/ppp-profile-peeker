@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./App.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { Card, CardContent, Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
 
 interface Message {
   average: number;
@@ -12,8 +13,31 @@ interface State {
   current: number;
 }
 
-class App extends React.Component<{}, State> {
-  constructor(props: {}) {
+const styles = (theme: Theme) =>
+  createStyles({
+    container: {
+      padding: theme.spacing.unit,
+      margin: "auto",
+      maxWidth: 800,
+    },
+    bar: {
+      backgroundColor: theme.palette.secondary.main,
+      marginRight: theme.spacing.unit,
+    },
+    header: {
+      background: theme.palette.primary.main,
+      padding: theme.spacing.unit * 2,
+      textAlign: "center",
+    },
+    title: {
+      color: theme.palette.primary.contrastText,
+    },
+  });
+
+interface Props extends WithStyles<typeof styles> {}
+
+class App extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       average: 0,
@@ -29,27 +53,42 @@ class App extends React.Component<{}, State> {
     });
     socket.addEventListener("message", event => {
       const data = JSON.parse(event.data) as Message;
-      this.setState(data);
+      this.setState(prevState => {
+        return data;
+      });
     });
   }
 
   public render() {
+    const { classes } = this.props;
     const { average, current } = this.state;
     return (
       <CssBaseline>
-        <div className="App">
-          <header className="App-header">
-            <h1 className="App-title">Welcome to React</h1>
+        <>
+          <header className={classes.header}>
+            <Typography variant="h1" className={classes.title}>
+              See what your car is doing
+            </Typography>
           </header>
-
-          <div>
-            <p>Lifetime Average CPU Temp is {average.toFixed(2)}C</p>
-            <p>Current CPU Temp is {current.toFixed(2)}</p>
+          <div className={classes.container}>
+            <Card>
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={1}>
+                    <div className={classes.bar} style={{ height: `${average}%`, marginTop: `${100 - average}%` }} />
+                  </Grid>
+                  <Grid item xs={10}>
+                    <Typography>Lifetime Average CPU Temp is {average.toFixed(2)}C</Typography>
+                    <Typography>Current CPU Temp is {current.toFixed(2)}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </>
       </CssBaseline>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

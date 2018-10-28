@@ -1,16 +1,14 @@
 import * as React from "react";
 import "./App.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Card, CardContent, Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
-
-interface Message {
-  average: number;
-  current: number;
-}
+import { Typography, createStyles, Theme, withStyles, WithStyles } from "@material-ui/core";
+import { ProfileState, Message } from "./types";
+import Profile from "./components/Profile";
 
 interface State {
-  average: number;
-  current: number;
+  profiles: {
+    [key: string]: ProfileState;
+  };
 }
 
 const styles = (theme: Theme) =>
@@ -20,14 +18,9 @@ const styles = (theme: Theme) =>
       margin: "auto",
       maxWidth: 800,
     },
-    bar: {
-      backgroundColor: theme.palette.secondary.main,
-      marginRight: theme.spacing.unit,
-    },
     header: {
       background: theme.palette.primary.main,
       padding: theme.spacing.unit * 2,
-      textAlign: "center",
     },
     title: {
       color: theme.palette.primary.contrastText,
@@ -40,8 +33,7 @@ class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      average: 0,
-      current: 0,
+      profiles: {},
     };
   }
 
@@ -52,43 +44,39 @@ class App extends React.Component<Props, State> {
       socket.send("Hello Server!");
     });
     socket.addEventListener("message", event => {
-      const data = JSON.parse(event.data) as Message;
+      const message = JSON.parse(event.data) as Message;
+      console.log(message);
       this.setState(prevState => {
-        return data;
+        const prevCopy = Object.assign({}, prevState);
+        prevCopy.profiles[message.id] = message.data;
+        return prevCopy;
       });
     });
   }
 
   public render() {
     const { classes } = this.props;
-    const { average, current } = this.state;
+    console.log("rendered");
     return (
       <CssBaseline>
         <>
           <header className={classes.header}>
-            <Typography variant="h1" className={classes.title}>
-              See what your car is doing
+            <Typography variant="h2" className={classes.title}>
+              Monio
             </Typography>
           </header>
-          <div className={classes.container}>
-            <Card>
-              <CardContent>
-                <Grid container>
-                  <Grid item xs={1}>
-                    <div className={classes.bar} style={{ height: `${average}%`, marginTop: `${100 - average}%` }} />
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Typography>Lifetime Average CPU Temp is {average.toFixed(2)}C</Typography>
-                    <Typography>Current CPU Temp is {current.toFixed(2)}</Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </div>
+          <div className={classes.container}>{this.renderProfiles()}</div>
         </>
       </CssBaseline>
     );
   }
+
+  private renderProfiles = () => {
+    const { profiles } = this.state;
+    return Object.entries(profiles).map(([id, profile]) => {
+      return <Profile key={id} profile={profile} />;
+    });
+  };
 }
 
 export default withStyles(styles)(App);

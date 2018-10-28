@@ -21,6 +21,9 @@ const theme = createMuiTheme({
     primary,
     secondary,
   },
+  typography: {
+    useNextVariants: true,
+  },
 });
 
 export default theme;

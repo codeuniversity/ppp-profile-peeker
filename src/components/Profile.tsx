@@ -20,7 +20,7 @@ class Profile extends React.Component<Props> {
     return (
       <Paper className={classes.card}>
         <Typography variant="h5">{profile.title}</Typography>
-        <Typography variant="body1">{profile.title}</Typography>
+        <Typography variant="body1">{profile.description}</Typography>
       </Paper>
     );
   }

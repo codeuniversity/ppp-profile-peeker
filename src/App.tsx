@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./App.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Typography, createStyles, Theme, withStyles, WithStyles } from "@material-ui/core";
+import { Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
 import { ProfileState, Message } from "./types";
 import Profile from "./components/Profile";
 
@@ -16,7 +16,6 @@ const styles = (theme: Theme) =>
     container: {
       padding: theme.spacing.unit,
       margin: "auto",
-      maxWidth: 800,
     },
     header: {
       background: theme.palette.primary.main,
@@ -60,9 +59,17 @@ class App extends React.Component<Props, State> {
 
   private renderProfiles = () => {
     const { profiles } = this.state;
-    return Object.entries(profiles).map(([id, profile]) => {
-      return <Profile key={id} profile={profile} />;
-    });
+    return (
+      <Grid container spacing={16} justify={"center"} alignItems="stretch">
+        {Object.entries(profiles).map(([id, profile]) => {
+          return (
+            <Grid item key={id} xs={12} sm={4} xl={3}>
+              <Profile profile={profile} />
+            </Grid>
+          );
+        })}
+      </Grid>
+    );
   };
 
   private openSocket = () => {

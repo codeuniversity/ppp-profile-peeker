@@ -7,6 +7,9 @@ const styles = (theme: Theme) =>
     card: {
       margin: "10px auto",
       padding: theme.spacing.unit,
+      maxWidth: 400,
+      height: "100%",
+    },
     action: {
       textAlign: "right",
     },

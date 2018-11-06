@@ -52,6 +52,14 @@ class App extends React.Component<Props, State> {
             </Typography>
           </header>
           <div className={classes.container}>{this.renderProfiles()}</div>
+          <a
+            className="GoogleLink-link"
+            href={`${process.env.REACT_APP_API_URL}/auth/google_oauth2?auth_origin_url=${
+              process.env.REACT_APP_ORIGIN_URL
+            }`}
+          >
+            Sign in with Google
+          </a>
         </>
       </CssBaseline>
     );

@@ -2,7 +2,7 @@ import * as React from "react";
 import "./App.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
-import { ProfileState, Message } from "./types";
+import { ProfileState, Message, isProfileUpdate } from "./types";
 import Profile from "./components/Profile";
 
 interface State {
@@ -72,6 +72,24 @@ class App extends React.Component<Props, State> {
     );
   };
 
+  private handleMessage = (message: Message) => {
+    const data = message.data;
+    if (isProfileUpdate(data)) {
+      this.setState(prevState => {
+        const prevCopy = Object.assign({}, prevState);
+        prevCopy.profiles[message.id] = data.state;
+        return prevCopy;
+      });
+    } else {
+      this.setState(prevState => {
+        const prevCopy = Object.assign({}, prevState);
+        delete prevCopy.profiles[message.id];
+        debugger;
+        return prevCopy;
+      });
+    }
+  };
+
   private openSocket = () => {
     const socket = new WebSocket("ws://localhost:4000");
 
@@ -81,11 +99,7 @@ class App extends React.Component<Props, State> {
     socket.addEventListener("message", event => {
       const message = JSON.parse(event.data) as Message;
       console.log(message);
-      this.setState(prevState => {
-        const prevCopy = Object.assign({}, prevState);
-        prevCopy.profiles[message.id] = message.data;
-        return prevCopy;
-      });
+      this.handleMessage(message);
     });
     socket.addEventListener("close", () => {
       setTimeout(() => {

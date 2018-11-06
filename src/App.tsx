@@ -38,20 +38,7 @@ class App extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    const socket = new WebSocket("ws://localhost:4000");
-
-    socket.addEventListener("open", event => {
-      socket.send("Hello Server!");
-    });
-    socket.addEventListener("message", event => {
-      const message = JSON.parse(event.data) as Message;
-      console.log(message);
-      this.setState(prevState => {
-        const prevCopy = Object.assign({}, prevState);
-        prevCopy.profiles[message.id] = message.data;
-        return prevCopy;
-      });
-    });
+    this.openSocket();
   }
 
   public render() {
@@ -75,6 +62,28 @@ class App extends React.Component<Props, State> {
     const { profiles } = this.state;
     return Object.entries(profiles).map(([id, profile]) => {
       return <Profile key={id} profile={profile} />;
+    });
+  };
+
+  private openSocket = () => {
+    const socket = new WebSocket("ws://localhost:4000");
+
+    socket.addEventListener("open", event => {
+      socket.send("Hello Server!");
+    });
+    socket.addEventListener("message", event => {
+      const message = JSON.parse(event.data) as Message;
+      console.log(message);
+      this.setState(prevState => {
+        const prevCopy = Object.assign({}, prevState);
+        prevCopy.profiles[message.id] = message.data;
+        return prevCopy;
+      });
+    });
+    socket.addEventListener("close", () => {
+      setTimeout(() => {
+        this.openSocket();
+      }, 1000);
     });
   };
 }

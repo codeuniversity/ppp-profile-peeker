@@ -7,6 +7,11 @@ const styles = (theme: Theme) =>
     card: {
       margin: "10px auto",
       padding: theme.spacing.unit,
+      maxWidth: 400,
+      height: "100%",
+    },
+    action: {
+      textAlign: "right",
     },
   });
 
@@ -20,7 +25,10 @@ class Profile extends React.Component<Props> {
     return (
       <Paper className={classes.card}>
         <Typography variant="h5">{profile.title}</Typography>
-        <Typography variant="body1">{profile.description}</Typography>
+        <Typography variant="body2">{profile.description}</Typography>
+        <Typography variant="body1" className={classes.action}>
+          {profile.action}
+        </Typography>
       </Paper>
     );
   }

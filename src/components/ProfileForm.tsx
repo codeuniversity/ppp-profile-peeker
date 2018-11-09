@@ -8,6 +8,13 @@ const styles = (theme: Theme) =>
       padding: theme.spacing.unit,
       maxWidth: 600,
     },
+    input: {
+      backgroundColor: "#ebebeb",
+      paddingLeft: theme.spacing.unit,
+      borderRadius: "3px",
+      border: "1px solid lightgrey",
+      fontFamily: "monospace",
+    },
   });
 
 interface ProfileFormProps extends WithStyles<typeof styles> {
@@ -33,7 +40,13 @@ class ProfileForm extends React.Component<ProfileFormProps, ProfileFormState> {
     const { evalScript, submitting } = this.state;
     return (
       <Paper className={classes.card}>
-        <TextField value={evalScript} onChange={this.onChange} multiline fullWidth />
+        <TextField
+          InputProps={{ className: classes.input }}
+          value={evalScript}
+          onChange={this.onChange}
+          multiline
+          fullWidth
+        />
         <Button disabled={submitting} onClick={this.handleSubmit}>
           Save
         </Button>

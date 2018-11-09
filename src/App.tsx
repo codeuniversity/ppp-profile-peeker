@@ -4,6 +4,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
 import { ProfileState, Message, isProfileUpdate } from "./types";
 import Profile from "./components/Profile";
+import ProfileForm from "./components/ProfileForm";
 
 interface State {
   profiles: {
@@ -60,6 +61,8 @@ class App extends React.Component<Props, State> {
           >
             Sign in with Google
           </a>
+
+          <ProfileForm onSubmit={this.handleProfilePost} />
         </>
       </CssBaseline>
     );
@@ -72,7 +75,7 @@ class App extends React.Component<Props, State> {
         {Object.entries(profiles).map(([id, profile]) => {
           return (
             <Grid item key={id} xs={12} sm={4} xl={3}>
-              <Profile profile={profile} />
+              <Profile profile={profile} id={id} onDelete={this.handleProfileDelete} />
             </Grid>
           );
         })}
@@ -92,7 +95,6 @@ class App extends React.Component<Props, State> {
       this.setState(prevState => {
         const prevCopy = Object.assign({}, prevState);
         delete prevCopy.profiles[message.id];
-        debugger;
         return prevCopy;
       });
     }
@@ -113,6 +115,19 @@ class App extends React.Component<Props, State> {
       setTimeout(() => {
         this.openSocket();
       }, 1000);
+    });
+  };
+
+  private handleProfileDelete = async (profileId: string) => {
+    await fetch(`http://localhost:4000/profiles/${profileId}`, {
+      method: "DELETE",
+    });
+  };
+
+  private handleProfilePost = async (evalScript: string) => {
+    await fetch(`http://localhost:4000/profiles`, {
+      method: "POST",
+      body: JSON.stringify({ eval_script: evalScript }),
     });
   };
 }

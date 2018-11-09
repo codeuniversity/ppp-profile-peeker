@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ProfileState } from "../types";
-import { Paper, Typography, Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
+import { Paper, Typography, Theme, createStyles, WithStyles, withStyles, Icon, IconButton } from "@material-ui/core";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -13,10 +13,15 @@ const styles = (theme: Theme) =>
     action: {
       textAlign: "right",
     },
+    actionBar: {
+      textAlign: "right",
+    },
   });
 
 interface Props extends WithStyles<typeof styles> {
   profile: ProfileState;
+  id: string;
+  onDelete?(id: string): void;
 }
 
 class Profile extends React.Component<Props> {
@@ -24,6 +29,7 @@ class Profile extends React.Component<Props> {
     const { profile, classes } = this.props;
     return (
       <Paper className={classes.card}>
+        {this.renderActionBar()}
         <Typography variant="h5">{profile.title}</Typography>
         <Typography variant="body2">{profile.description}</Typography>
         <Typography variant="body1" className={classes.action}>
@@ -32,6 +38,27 @@ class Profile extends React.Component<Props> {
       </Paper>
     );
   }
+
+  private renderActionBar = () => {
+    const { classes, onDelete } = this.props;
+    if (onDelete) {
+      return (
+        <div className={classes.actionBar}>
+          <IconButton onClick={this.handleDeleteClick}>
+            <Icon>delete</Icon>
+          </IconButton>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  private handleDeleteClick = () => {
+    const { onDelete, id } = this.props;
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
 }
 
 export default withStyles(styles)(Profile);

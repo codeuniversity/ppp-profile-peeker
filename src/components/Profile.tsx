@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ProfileState } from "../types";
+import { ProfileState } from "../services/ProfilerTypes";
 import { Paper, Typography, Theme, createStyles, WithStyles, withStyles, Icon, IconButton } from "@material-ui/core";
 
 const styles = (theme: Theme) =>

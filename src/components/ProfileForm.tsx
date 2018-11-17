@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, Button, Paper, Theme, createStyles, withStyles, WithStyles } from "@material-ui/core";
+import { TextField, Button, Paper, Theme, createStyles, withStyles, WithStyles, Grid } from "@material-ui/core";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -9,10 +9,6 @@ const styles = (theme: Theme) =>
       maxWidth: 600,
     },
     input: {
-      backgroundColor: "#ebebeb",
-      paddingLeft: theme.spacing.unit,
-      borderRadius: "3px",
-      border: "1px solid lightgrey",
       fontFamily: "monospace",
     },
   });
@@ -40,16 +36,26 @@ class ProfileForm extends React.Component<ProfileFormProps, ProfileFormState> {
     const { evalScript, submitting } = this.state;
     return (
       <Paper className={classes.card}>
-        <TextField
-          InputProps={{ className: classes.input }}
-          value={evalScript}
-          onChange={this.onChange}
-          multiline
-          fullWidth
-        />
-        <Button disabled={submitting} onClick={this.handleSubmit}>
-          Save
-        </Button>
+        <Grid container spacing={16}>
+          <Grid item xs={12}>
+            <TextField
+              InputProps={{ className: classes.input }}
+              value={evalScript}
+              onChange={this.onChange}
+              multiline
+              variant="outlined"
+              fullWidth
+              label="Script"
+            />
+          </Grid>
+          <Grid container item direction="row-reverse">
+            <Grid item>
+              <Button disabled={submitting} onClick={this.handleSubmit} variant="outlined">
+                Save
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
       </Paper>
     );
   }

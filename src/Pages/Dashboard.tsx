@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./Dashboard.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { Typography, createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
+import { createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
 import { ProfileState } from "../services/ProfilerTypes";
 import Profile from "../components/Profile";
 import ProfileForm from "../components/ProfileForm";
@@ -17,13 +17,6 @@ const styles = (theme: Theme) =>
     container: {
       padding: theme.spacing.unit,
       margin: "auto",
-    },
-    header: {
-      background: theme.palette.primary.main,
-      padding: theme.spacing.unit * 2,
-    },
-    title: {
-      color: theme.palette.primary.contrastText,
     },
   });
 
@@ -51,11 +44,6 @@ class App extends React.Component<Props, State> {
     return (
       <CssBaseline>
         <>
-          <header className={classes.header}>
-            <Typography variant="h2" className={classes.title}>
-              Monio
-            </Typography>
-          </header>
           <div className={classes.container}>{this.renderProfiles()}</div>
           <ProfileForm onSubmit={ProfilerApi.postProfile} />
         </>

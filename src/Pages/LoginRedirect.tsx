@@ -1,10 +1,11 @@
 import * as React from "react";
 import queryString from "query-string";
-import { LibraryCredentials } from "../services/LibraryApi";
+
 import { LibraryApiContextValue } from "../components/LibraryApiContext";
 import withLibraryApi from "../components/utility/withLibraryApi";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { dashboardRoute, loginErrorRoute } from "../components/Routes";
+import { LibraryCredentials } from "../services/LibraryTypes";
 
 interface LoginSuccessProps extends LibraryApiContextValue, RouteComponentProps {}
 

@@ -6,7 +6,7 @@ const styles = (theme: Theme) =>
   createStyles({
     card: {
       margin: "10px auto",
-      padding: theme.spacing.unit,
+      padding: `0 ${theme.spacing.unit}px`,
       maxWidth: 400,
       height: "100%",
     },
@@ -15,6 +15,9 @@ const styles = (theme: Theme) =>
     },
     actionBar: {
       textAlign: "right",
+    },
+    deleteIcon: {
+      padding: 8,
     },
   });
 
@@ -44,8 +47,8 @@ class Profile extends React.Component<Props> {
     if (onDelete) {
       return (
         <div className={classes.actionBar}>
-          <IconButton onClick={this.handleDeleteClick}>
-            <Icon>delete</Icon>
+          <IconButton className={classes.deleteIcon} onClick={this.handleDeleteClick}>
+            <Icon fontSize="small">delete</Icon>
           </IconButton>
         </div>
       );

@@ -1,4 +1,4 @@
-import { LibraryCredentials, Config, Vote } from "./LibraryTypes";
+import { LibraryCredentials, Config, Vote, UserInfo } from "./LibraryTypes";
 
 const libraryUrl = "http://localhost:3000";
 
@@ -30,7 +30,7 @@ export default class LibraryApi {
   };
 
   public onCredentialsUpdated = (handler: CredentialsUpdatedHandler) => {
-    this.onCredentialsUpdated = handler;
+    this.credentialsUpdatedHandler = handler;
   };
 
   public fetchConfigs = () => {
@@ -47,6 +47,10 @@ export default class LibraryApi {
 
   public deleteVoteForConfig = (configId: string) => {
     return this.fetch(`configs/${configId}/vote`, { method: "DELETE" });
+  };
+
+  public fetchUserInfo = () => {
+    return this.fetch(`me`).then(response => response.json()) as Promise<UserInfo>;
   };
 
   private getCredentials = () => {

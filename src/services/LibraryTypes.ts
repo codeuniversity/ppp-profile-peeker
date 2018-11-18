@@ -23,3 +23,10 @@ export interface LibraryCredentials {
   uid: string;
   client: string;
 }
+
+export interface UserInfo {
+  id: string;
+  image: string;
+  name: string;
+  nickname: string;
+}

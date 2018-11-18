@@ -1,9 +1,11 @@
+import { UserInfo } from "./../services/LibraryTypes";
 import React from "react";
 import LibraryApi from "../services/LibraryApi";
 
 export interface LibraryApiContextValue {
   libraryApi: LibraryApi;
   isLoggedIn: boolean;
+  currentUser?: UserInfo;
 }
 
 const defaultValue: LibraryApiContextValue = {

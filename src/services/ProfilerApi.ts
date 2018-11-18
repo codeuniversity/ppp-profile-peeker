@@ -25,7 +25,6 @@ export default class ProfilerApi {
 
     socket.addEventListener("message", event => {
       const message = JSON.parse(event.data) as Message;
-      console.log(message);
       this.handleMessage(message);
     });
     socket.addEventListener("close", () => {

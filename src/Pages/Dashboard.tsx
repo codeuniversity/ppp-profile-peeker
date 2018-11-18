@@ -40,7 +40,6 @@ class App extends React.Component<Props, State> {
 
   public render() {
     const { classes } = this.props;
-    console.log("rendered");
     return (
       <CssBaseline>
         <>

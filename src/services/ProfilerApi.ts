@@ -36,10 +36,10 @@ export default class ProfilerApi {
     });
   };
 
-  public static postProfile = async (evalScript: string) => {
+  public static postProfile = async (id: string, evalScript: string) => {
     await fetch(`${profilerHttpUrl}/profiles`, {
       method: "POST",
-      body: JSON.stringify({ eval_script: evalScript }),
+      body: JSON.stringify({ id, eval_script: evalScript }),
     });
   };
 

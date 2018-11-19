@@ -1,10 +1,11 @@
 import React, { ComponentType } from "react";
 import LibraryApiContext, { LibraryApiContextValue } from "../LibraryApiContext";
 
-function withLibraryApi<PropsWithoutContextValue extends object, Props extends PropsWithoutContextValue & LibraryApiContextValue>(
-  Component: ComponentType<Props>,
-) {
-  return (props: PropsWithoutContextValue) => {
+function withLibraryApi<
+  PropsWithoutLibraryContextValue extends object,
+  Props extends PropsWithoutLibraryContextValue & LibraryApiContextValue
+>(Component: ComponentType<Props>) {
+  return (props: PropsWithoutLibraryContextValue) => {
     return (
       <LibraryApiContext.Consumer>
         {(value: LibraryApiContextValue) => <Component {...props} {...value} />}

@@ -3,8 +3,14 @@ import { Config } from "../services/LibraryTypes";
 import withLibraryApi from "../components/utility/withLibraryApi";
 import { LibraryApiContextValue } from "../components/LibraryApiContext";
 import ConfigList from "../components/ConfigList";
+import withProfilerApi, { ProfilerApiContextProps } from "../components/utility/withProfilerApi";
+import { Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
+import ProfilerApi from "../services/ProfilerApi";
 
-interface Props extends LibraryApiContextValue {}
+const styles = (theme: Theme) =>
+  createStyles({
+    bla: {},
+  });
 
 const initialState = {
   loaded: false,
@@ -20,6 +26,7 @@ type LoadedState = {
 function isLoaded(state: State): state is LoadedState {
   return state.loaded;
 }
+type Props = WithStyles<typeof styles> & ProfilerApiContextProps & LibraryApiContextValue;
 
 type State = InitialState | LoadedState;
 
@@ -43,7 +50,15 @@ class ConfigSelect extends React.Component<Props, State> {
     const state = this.state;
     if (isLoaded(state)) {
       const { configs } = state;
-      return <ConfigList configs={configs} onVoteToggle={this.onVoteHandler()} />;
+      const { profileExists } = this.props;
+      return (
+        <ConfigList
+          configs={configs}
+          onVoteToggle={this.onVoteHandler()}
+          profileExists={profileExists}
+          onDownload={ProfilerApi.postProfile}
+        />
+      );
     }
 
     return null;
@@ -66,4 +81,5 @@ class ConfigSelect extends React.Component<Props, State> {
   };
 }
 
-export default withLibraryApi(ConfigSelect);
+const profilerApiIncluded = withProfilerApi(ConfigSelect);
+export default withStyles(styles)(withLibraryApi(profilerApiIncluded));

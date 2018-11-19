@@ -13,15 +13,22 @@ const styles = (theme: Theme) =>
 interface Props extends WithStyles<typeof styles> {
   configs: Config[];
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
+  profileExists: (profileId: string) => boolean;
+  onDownload: (configId: string, evalScript: string) => Promise<void>;
 }
 
 const ConfigList: React.SFC<Props> = props => {
-  const { configs, classes, onVoteToggle } = props;
+  const { configs, classes, onVoteToggle, profileExists, onDownload } = props;
   return (
     <Grid container spacing={16} justify={"center"} alignItems="stretch" className={classes.container}>
       {configs.map(config => (
         <Grid key={config.id} item xs={12} sm={4} xl={2}>
-          <ConfigItem config={config} onVoteToggle={onVoteToggle} />
+          <ConfigItem
+            onDownload={onDownload}
+            config={config}
+            onVoteToggle={onVoteToggle}
+            alreadyDownloaded={profileExists(config.id)}
+          />
         </Grid>
       ))}
     </Grid>

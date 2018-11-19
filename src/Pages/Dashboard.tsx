@@ -3,10 +3,9 @@ import "./Dashboard.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
 import Profile from "../components/Profile";
-import ProfileForm from "../components/ProfileForm";
+// import ProfileForm from "../components/ProfileForm";
 import ProfilerApi from "../services/ProfilerApi";
-import withProfilerApi from "../components/utility/withProfilerApi";
-import { ProfilerApiContextValue } from "../components/ProfilerApiContext";
+import withProfilerApi, { ProfilerApiContextProps } from "../components/utility/withProfilerApi";
 interface State {}
 
 const styles = (theme: Theme) =>
@@ -17,7 +16,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-type Props = WithStyles<typeof styles> & ProfilerApiContextValue;
+type Props = WithStyles<typeof styles> & ProfilerApiContextProps;
 
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -33,7 +32,7 @@ class App extends React.Component<Props, State> {
       <CssBaseline>
         <>
           <div className={classes.container}>{this.renderProfiles()}</div>
-          <ProfileForm onSubmit={ProfilerApi.postProfile} />
+          {/* <ProfileForm onSubmit={ProfilerApi.postProfile} /> */}
         </>
       </CssBaseline>
     );

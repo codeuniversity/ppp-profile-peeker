@@ -20,8 +20,8 @@ const ConfigList: React.SFC<Props> = props => {
   return (
     <Grid container spacing={16} justify={"center"} alignItems="stretch" className={classes.container}>
       {configs.map(config => (
-        <Grid item xs={12} sm={4} xl={2}>
-          <ConfigItem key={config.id} config={config} onVoteToggle={onVoteToggle} />
+        <Grid key={config.id} item xs={12} sm={4} xl={2}>
+          <ConfigItem config={config} onVoteToggle={onVoteToggle} />
         </Grid>
       ))}
     </Grid>

@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import withLibraryApi from "./utility/withLibraryApi";
 import { LibraryApiContextValue } from "./LibraryApiContext";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { dashboardRoute, configSelectRoute, loginRoute } from "./Routes";
 
 const styles = (theme: Theme) =>
@@ -26,10 +26,16 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.contrastText,
       display: "inline-block",
       marginRight: theme.spacing.unit,
+      textDecoration: "none",
+      borderBottom: "1px solid rgba(0,0,0,0)",
+      height: "100%",
     },
     userInfo: {
       textAlign: "center",
       color: theme.palette.primary.contrastText,
+    },
+    activeLink: {
+      borderBottom: `1px solid ${theme.palette.primary.contrastText}`,
     },
   });
 
@@ -46,18 +52,16 @@ class Menu extends React.Component<Props> {
     return (
       <AppBar className={classes.header} position="static">
         <Toolbar>
-          <Grid container justify="space-between" alignItems="center">
+          <Grid container justify="space-between" alignItems="center" alignContent="stretch">
             <Grid item>
-              <Link to={dashboardRoute}>
-                <Typography variant="h3" className={classes.navItem}>
+              <NavLink to={dashboardRoute} exact className={classes.navItem} activeClassName={classes.activeLink}>
+                <Typography variant="h4" color="inherit">
                   Monio
                 </Typography>
-              </Link>
-              <Link to={configSelectRoute}>
-                <Typography variant="h5" className={classes.navItem}>
-                  Configs
-                </Typography>
-              </Link>
+              </NavLink>
+              <NavLink to={configSelectRoute} exact className={classes.navItem} activeClassName={classes.activeLink}>
+                <Icon>settings</Icon>
+              </NavLink>
             </Grid>
             <Grid item>
               {isLoggedIn ? (
@@ -72,11 +76,11 @@ class Menu extends React.Component<Props> {
                   </Grid>
                 </Typography>
               ) : (
-                <Link to={loginRoute}>
-                  <Typography variant="h5" className={classes.navItem}>
+                <NavLink to={loginRoute} exact className={classes.navItem} activeClassName={classes.activeLink}>
+                  <Typography variant="h5" color="inherit">
                     Login
                   </Typography>
-                </Link>
+                </NavLink>
               )}
             </Grid>
           </Grid>

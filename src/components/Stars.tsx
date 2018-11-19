@@ -31,12 +31,7 @@ const Stars: React.SFC<Props> = props => {
     );
   }
   return (
-    <Button
-      variant={props.hasStared ? "contained" : "outlined"}
-      color={props.hasStared ? "primary" : "default"}
-      size="small"
-      className={props.classes.button}
-    >
+    <Button variant="outlined" size="small" className={props.classes.button} disabled>
       <Icon fontSize="small">star</Icon>
       {props.starCount}
     </Button>

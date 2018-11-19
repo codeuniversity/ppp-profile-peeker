@@ -46,7 +46,7 @@ class ConfigSelect extends React.Component<Props, State> {
       return <ConfigList configs={configs} onVoteToggle={this.onVoteHandler()} />;
     }
 
-    return <div>Loading....</div>;
+    return null;
   }
 
   private onVoteHandler = () => {

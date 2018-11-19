@@ -2,15 +2,12 @@ import * as React from "react";
 import "./Dashboard.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createStyles, Theme, withStyles, WithStyles, Grid } from "@material-ui/core";
-import { ProfileState } from "../services/ProfilerTypes";
 import Profile from "../components/Profile";
 import ProfileForm from "../components/ProfileForm";
 import ProfilerApi from "../services/ProfilerApi";
-interface State {
-  profiles: {
-    [key: string]: ProfileState;
-  };
-}
+import withProfilerApi from "../components/utility/withProfilerApi";
+import { ProfilerApiContextValue } from "../components/ProfilerApiContext";
+interface State {}
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -20,7 +17,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles> & ProfilerApiContextValue;
 
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -28,14 +25,6 @@ class App extends React.Component<Props, State> {
     this.state = {
       profiles: {},
     };
-    this.profilerApi = new ProfilerApi();
-  }
-  private profilerApi: ProfilerApi;
-
-  public componentDidMount() {
-    this.profilerApi.onProfileUpdate(this.handleProfileUpdate);
-    this.profilerApi.onProfileDelete(this.handleProfileDelete);
-    this.profilerApi.openSocket();
   }
 
   public render() {
@@ -51,7 +40,7 @@ class App extends React.Component<Props, State> {
   }
 
   private renderProfiles = () => {
-    const { profiles } = this.state;
+    const { profiles } = this.props;
     return (
       <Grid container spacing={16} justify={"center"} alignItems="stretch">
         {Object.entries(profiles).map(([id, profile]) => {
@@ -64,22 +53,6 @@ class App extends React.Component<Props, State> {
       </Grid>
     );
   };
-
-  private handleProfileUpdate = (profileId: string, profileState: ProfileState) => {
-    this.setState(prevState => {
-      const prevCopy = Object.assign({}, prevState);
-      prevCopy.profiles[profileId] = profileState;
-      return prevCopy;
-    });
-  };
-
-  private handleProfileDelete = (profileId: string) => {
-    this.setState(prevState => {
-      const prevCopy = Object.assign({}, prevState);
-      delete prevCopy.profiles[profileId];
-      return prevCopy;
-    });
-  };
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(withProfilerApi(App));

@@ -12,11 +12,13 @@ export default class ProfilerApi {
   private profileUpdateHandler: ProfileUpdateHandler | undefined;
   private profileDeleteHandler: ProfileDeleteHandler | undefined;
 
-  public onProfileUpdate = (profileUpdateHandler: (profileId: string, profileState: ProfileState) => void) => {
+  public onProfileUpdate = (
+    profileUpdateHandler: ((profileId: string, profileState: ProfileState) => void) | undefined,
+  ) => {
     this.profileUpdateHandler = profileUpdateHandler;
   };
 
-  public onProfileDelete = (profileDeleteHandler: (profileId: string) => void) => {
+  public onProfileDelete = (profileDeleteHandler: ((profileId: string) => void) | undefined) => {
     this.profileDeleteHandler = profileDeleteHandler;
   };
 

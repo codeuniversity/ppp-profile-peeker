@@ -1,6 +1,16 @@
 import * as React from "react";
 import { ProfileState } from "../services/ProfilerTypes";
-import { Paper, Typography, Theme, createStyles, WithStyles, withStyles, Icon, IconButton } from "@material-ui/core";
+import {
+  Paper,
+  Typography,
+  Theme,
+  createStyles,
+  WithStyles,
+  withStyles,
+  Icon,
+  IconButton,
+  Divider,
+} from "@material-ui/core";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,6 +48,14 @@ class Profile extends React.Component<Props> {
         <Typography variant="body1" className={classes.action}>
           {profile.action}
         </Typography>
+        {profile.error ? (
+          <>
+            <Divider />
+            <Typography variant="body2" color="secondary">
+              {profile.error}
+            </Typography>
+          </>
+        ) : null}
       </Paper>
     );
   }

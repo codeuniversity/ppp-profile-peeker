@@ -2,6 +2,7 @@ export interface ProfileState {
   title?: string;
   description?: string;
   action?: string;
+  error?:string;
 }
 
 interface ProfileUpdate {

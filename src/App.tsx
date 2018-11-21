@@ -4,6 +4,7 @@ import Routes from "./components/Routes";
 import theme from "./theme";
 import LibraryApiProvider from "./components/LibraryApiProvider";
 import ProfilerApiProvider from "./components/ProfilerApiProvider";
+import NotificationProvider from "./components/NotificationProvider";
 
 interface AppProps {}
 
@@ -17,11 +18,13 @@ export default class App extends React.Component<AppProps> {
       <>
         <CssBaseline />
         <MuiThemeProvider theme={theme}>
-          <ProfilerApiProvider>
-            <LibraryApiProvider>
-              <Routes />
-            </LibraryApiProvider>
-          </ProfilerApiProvider>
+          <NotificationProvider>
+            <ProfilerApiProvider>
+              <LibraryApiProvider>
+                <Routes />
+              </LibraryApiProvider>
+            </ProfilerApiProvider>
+          </NotificationProvider>
         </MuiThemeProvider>
       </>
     );

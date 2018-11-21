@@ -69,7 +69,7 @@ class ConfigItem extends React.Component<Props, State> {
               <Grid item>
                 {alreadyDownloaded && (
                   <NavLink to={dashboardRoute} className={classes.navLink}>
-                    <Button variant="flat" size="small">
+                    <Button variant="text" size="small">
                       <DownloadedIcon className={classes.downloadedIcon} /> You use this config
                     </Button>
                   </NavLink>

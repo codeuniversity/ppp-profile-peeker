@@ -4,7 +4,7 @@ import NotificationContext, { NotificationContextValue } from "../NotificationCo
 function withNotifications<
   PropsWithoutNotificationContextValue extends object,
   Props extends PropsWithoutNotificationContextValue & NotificationContextValue
->(Component: ComponentType<Props>) {
+>(Component: ComponentType<Props>): ComponentType<PropsWithoutNotificationContextValue> {
   return (props: PropsWithoutNotificationContextValue) => {
     return (
       <NotificationContext.Consumer>

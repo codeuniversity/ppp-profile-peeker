@@ -2,15 +2,22 @@ import * as React from "react";
 import LibraryApiContext from "./LibraryApiContext";
 import LibraryApi from "../services/LibraryApi";
 import { UserInfo } from "../services/LibraryTypes";
-interface Props {
-  chidlren?: React.ReactNode;
-}
+import withNotifications from "./utility/withNotifications";
+import { NotificationContextValue } from "./NotificationContext";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { loginRoute } from "./Routes";
+
+type Props = NotificationContextValue &
+  RouteComponentProps<{}> & {
+    chidlren?: React.ReactNode;
+  };
 
 interface State {
   currentUser?: UserInfo;
+  currentNotificationId?: string;
 }
 
-export default class LibraryApiProvider extends React.Component<Props, State> {
+class LibraryApiProvider extends React.Component<Props, State> {
   private libraryApi: LibraryApi;
   constructor(props: Props) {
     super(props);
@@ -20,9 +27,12 @@ export default class LibraryApiProvider extends React.Component<Props, State> {
 
   public componentWillMount = async () => {
     this.libraryApi.onCredentialsUpdated(this.handleCredentialsChanged);
+    this.libraryApi.onUnauthorized(this.handleUnautorized);
     if (this.libraryApi.isLoggedIn()) {
       const currentUser = await this.libraryApi.fetchUserInfo();
-      this.setState({ currentUser });
+      if (currentUser !== undefined) {
+        this.setState({ currentUser });
+      }
     }
   };
 
@@ -33,6 +43,24 @@ export default class LibraryApiProvider extends React.Component<Props, State> {
       });
     }
     this.forceUpdate();
+  };
+
+  private handleUnautorized = () => {
+    const { addNotification, removeNotification, history } = this.props;
+    const { currentNotificationId } = this.state;
+    if (currentNotificationId !== undefined) {
+      removeNotification(currentNotificationId);
+    }
+    const id = addNotification({
+      message: "Your session expired",
+      type: "error",
+      ationLabel: "relogin",
+      onAction: () => {
+        removeNotification(this.state.currentNotificationId || "");
+        history.push(loginRoute);
+      },
+    });
+    this.setState({ currentNotificationId: id });
   };
 
   public render() {
@@ -49,3 +77,5 @@ export default class LibraryApiProvider extends React.Component<Props, State> {
     );
   }
 }
+
+export default withNotifications(withRouter(LibraryApiProvider));

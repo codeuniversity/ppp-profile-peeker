@@ -5,6 +5,7 @@ import theme from "./theme";
 import LibraryApiProvider from "./components/LibraryApiProvider";
 import ProfilerApiProvider from "./components/ProfilerApiProvider";
 import NotificationProvider from "./components/NotificationProvider";
+import { BrowserRouter as Router } from "react-router-dom";
 
 interface AppProps {}
 
@@ -18,13 +19,15 @@ export default class App extends React.Component<AppProps> {
       <>
         <CssBaseline />
         <MuiThemeProvider theme={theme}>
-          <NotificationProvider>
-            <ProfilerApiProvider>
-              <LibraryApiProvider>
-                <Routes />
-              </LibraryApiProvider>
-            </ProfilerApiProvider>
-          </NotificationProvider>
+          <Router>
+            <NotificationProvider>
+              <ProfilerApiProvider>
+                <LibraryApiProvider>
+                  <Routes />
+                </LibraryApiProvider>
+              </ProfilerApiProvider>
+            </NotificationProvider>
+          </Router>
         </MuiThemeProvider>
       </>
     );

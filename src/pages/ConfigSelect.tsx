@@ -43,7 +43,9 @@ class ConfigSelect extends React.Component<Props, State> {
   private loadConfigs = async () => {
     const { libraryApi } = this.props;
     const configs = await libraryApi.fetchConfigs();
-    this.setState({ configs, loaded: true });
+    if (configs) {
+      this.setState({ configs, loaded: true });
+    }
   };
 
   public render() {

@@ -3,9 +3,10 @@ import { LibraryCredentials, Config, Vote, UserInfo } from "./LibraryTypes";
 const libraryUrl = "http://localhost:3000";
 
 const authCredentialsKey = "authCredentials";
-type CredentialsUpdatedHandler = () => void;
+type Handler = () => void;
 export default class LibraryApi {
-  private credentialsUpdatedHandler: CredentialsUpdatedHandler | undefined;
+  private credentialsUpdatedHandler: Handler | undefined;
+  private unauthorizedHandler: Handler | undefined;
 
   public setCredentials = (credentials: LibraryCredentials) => {
     const credentialString = JSON.stringify(credentials);
@@ -29,28 +30,44 @@ export default class LibraryApi {
     return !!credentials && !!credentials["access-token"] && !!credentials.client && !!credentials.uid;
   };
 
-  public onCredentialsUpdated = (handler: CredentialsUpdatedHandler) => {
+  public onCredentialsUpdated = (handler: Handler) => {
     this.credentialsUpdatedHandler = handler;
   };
 
-  public fetchConfigs = () => {
-    return this.fetch("configs").then(response => response.json()) as Promise<Config[]>;
+  public onUnauthorized = (handler: Handler) => {
+    this.unauthorizedHandler = handler;
   };
 
-  public voteForConfig = (configId: string) => {
+  public fetchConfigs = async () => {
+    const response = await this.fetch("configs");
+    if (this.checkStatus(response)) {
+      return (await response.json()) as Promise<Config[]>;
+    }
+    return;
+  };
+
+  public voteForConfig = async (configId: string) => {
     const vote: Vote = {
       config_id: configId,
     };
 
-    return this.fetch("votes", { method: "POST" }, vote).then(response => response.json());
+    const response = await this.fetch("votes", { method: "POST" }, vote);
+    if (this.checkStatus(response)) {
+      return await response.json();
+    }
+    return;
   };
 
   public deleteVoteForConfig = (configId: string) => {
     return this.fetch(`configs/${configId}/vote`, { method: "DELETE" });
   };
 
-  public fetchUserInfo = () => {
-    return this.fetch(`me`).then(response => response.json()) as Promise<UserInfo>;
+  public fetchUserInfo = async () => {
+    const response = await this.fetch(`me`);
+    if (this.checkStatus(response)) {
+      return (await response.json()) as Promise<UserInfo>;
+    }
+    return;
   };
 
   private getCredentials = () => {
@@ -73,5 +90,16 @@ export default class LibraryApi {
       `${libraryUrl}/${path}`,
       Object.assign({}, options, { headers }, body ? { body: JSON.stringify(body) } : {}),
     );
+  };
+
+  private checkStatus = (response: Response) => {
+    if (response.status === 401) {
+      this.logout();
+      if (this.unauthorizedHandler !== undefined) {
+        this.unauthorizedHandler();
+      }
+      return false;
+    }
+    return true;
   };
 }

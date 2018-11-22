@@ -1,8 +1,9 @@
 export interface ProfileState {
+  script: string;
   title?: string;
   description?: string;
   action?: string;
-  error?:string;
+  error?: string;
 }
 
 interface ProfileUpdate {

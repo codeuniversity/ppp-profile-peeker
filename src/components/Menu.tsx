@@ -37,6 +37,14 @@ const styles = (theme: Theme) =>
     activeLink: {
       borderBottom: `1px solid ${theme.palette.primary.contrastText}`,
     },
+    smallBar: {
+      backgroundColor: theme.palette.primary.dark,
+      position: "relative",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: theme.spacing.unit * 2,
+    },
   });
 
 type Props = WithStyles<typeof styles> & LibraryApiContextValue & {};
@@ -51,6 +59,7 @@ class Menu extends React.Component<Props> {
     const { classes, isLoggedIn, libraryApi } = this.props;
     return (
       <AppBar className={classes.header} position="static">
+        <div className={classes.smallBar} />
         <Toolbar>
           <Grid container justify="space-between" alignItems="center" alignContent="stretch">
             <Grid item>

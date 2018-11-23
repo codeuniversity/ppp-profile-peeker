@@ -23,9 +23,11 @@ const styles = (theme: Theme) =>
     paper: {
       padding: theme.spacing.unit,
       height: "100%",
+      overflowX: "hidden",
     },
     container: {
       height: "100%",
+      width: "100%",
     },
     script: {
       fontFamily: "monospace",
@@ -64,7 +66,7 @@ class ConfigItem extends React.Component<Props, State> {
     return (
       <Paper className={classes.paper}>
         <Grid className={classes.container} container direction="column" justify="space-between">
-          <Grid item>
+          <Grid item style={{ width: "100%" }}>
             <Grid container justify="space-between">
               <Grid item>
                 {alreadyDownloaded && (

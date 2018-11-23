@@ -11,8 +11,8 @@ import {
   IconButton,
   Icon,
 } from "@material-ui/core";
-import withLibraryApi from "./utility/withLibraryApi";
-import { LibraryApiContextValue } from "./LibraryApiContext";
+import withLibraryApi from "../utility/withLibraryApi";
+import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 import { NavLink } from "react-router-dom";
 import { dashboardRoute, configSelectRoute, loginRoute } from "./Routes";
 

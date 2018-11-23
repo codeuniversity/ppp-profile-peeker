@@ -20,6 +20,11 @@ export interface Message {
   data: ProfileUpdate | ProfileDelete;
 }
 
+export interface RawMetaElement {
+  name: string;
+  type: number;
+}
+
 export function isProfileUpdate(objectToCheck: ProfileUpdate | ProfileDelete): objectToCheck is ProfileUpdate {
   return objectToCheck.type === "update";
 }

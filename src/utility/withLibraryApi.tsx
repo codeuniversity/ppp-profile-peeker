@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import LibraryApiContext, { LibraryApiContextValue } from "../LibraryApiContext";
+import LibraryApiContext, { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 
 function withLibraryApi<
   PropsWithoutLibraryContextValue extends object,

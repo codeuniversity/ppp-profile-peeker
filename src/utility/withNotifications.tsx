@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import NotificationContext, { NotificationContextValue } from "../NotificationContext";
+import NotificationContext, { NotificationContextValue } from "../contexts/NotificationContext";
 
 function withNotifications<
   PropsWithoutNotificationContextValue extends object,

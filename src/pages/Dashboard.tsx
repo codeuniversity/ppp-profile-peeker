@@ -126,7 +126,7 @@ class App extends React.Component<Props, State> {
     this.setState({ scriptDialogOpen: true });
   };
   private closeScriptDialog = () => {
-    this.setState({ scriptDialogOpen: false });
+    this.setState({ scriptDialogOpen: false, newScript: "" });
   };
 
   private onScriptChange = (newScript: string) => {

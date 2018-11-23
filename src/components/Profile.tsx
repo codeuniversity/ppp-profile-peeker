@@ -45,6 +45,7 @@ interface Props extends WithStyles<typeof styles> {
   profile: ProfileState;
   id: string;
   onDelete?(id: string): void;
+  onCopy?(id: string): void;
 }
 
 class Profile extends React.Component<Props> {
@@ -80,13 +81,20 @@ class Profile extends React.Component<Props> {
   }
 
   private renderActionBar = () => {
-    const { classes, onDelete } = this.props;
-    if (onDelete) {
+    const { classes, onDelete, onCopy } = this.props;
+    if (onDelete || onCopy) {
       return (
         <div className={classes.actionBar}>
-          <IconButton className={classes.deleteIcon} onClick={this.handleDeleteClick}>
-            <Icon fontSize="small">delete</Icon>
-          </IconButton>
+          {onCopy && (
+            <IconButton className={classes.deleteIcon} onClick={this.handleCopyClick}>
+              <Icon fontSize="small">content_copy</Icon>
+            </IconButton>
+          )}
+          {onDelete && (
+            <IconButton className={classes.deleteIcon} onClick={this.handleDeleteClick}>
+              <Icon fontSize="small">delete</Icon>
+            </IconButton>
+          )}
         </div>
       );
     }
@@ -97,6 +105,12 @@ class Profile extends React.Component<Props> {
     const { onDelete, id } = this.props;
     if (onDelete) {
       onDelete(id);
+    }
+  };
+  private handleCopyClick = () => {
+    const { onCopy, id } = this.props;
+    if (onCopy) {
+      onCopy(id);
     }
   };
 }

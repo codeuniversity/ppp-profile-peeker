@@ -8,9 +8,9 @@ import {
   WithStyles,
   withStyles,
   Icon,
-  IconButton,
   Divider,
   Grid,
+  Button,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 
@@ -23,14 +23,8 @@ const styles = (theme: Theme) =>
       height: "100%",
       padding: theme.spacing.unit,
     },
-    action: {
+    actionText: {
       textAlign: "right",
-    },
-    actionBar: {
-      textAlign: "right",
-    },
-    deleteIcon: {
-      padding: 8,
     },
     scriptText: {
       fontFamily: "monospace",
@@ -38,6 +32,13 @@ const styles = (theme: Theme) =>
     },
     errorText: {
       color: red[600],
+    },
+    action: {
+      padding: `${theme.spacing.unit / 3}px ${theme.spacing.unit}px`,
+      minWidth: 0,
+    },
+    divider: {
+      margin: `${theme.spacing.unit}px 0`,
     },
   });
 
@@ -55,14 +56,14 @@ class Profile extends React.Component<Props> {
       <Paper className={classes.card}>
         <Grid className={classes.container} container direction="column" justify="space-between">
           <Grid item>
-            {this.renderActionBar()}
             <Typography variant="h5">{profile.title}</Typography>
             <Typography variant="body2">{profile.description}</Typography>
-            <Typography variant="body1" className={classes.action}>
-              {profile.action}
-            </Typography>
           </Grid>
           <Grid item>
+            <Typography variant="body1" className={classes.actionText}>
+              {profile.action}
+            </Typography>
+
             {profile.error ? (
               <>
                 <Typography variant="body2" className={classes.scriptText}>
@@ -74,6 +75,8 @@ class Profile extends React.Component<Props> {
                 </Typography>
               </>
             ) : null}
+            <Divider className={classes.divider} />
+            {this.renderActionBar()}
           </Grid>
         </Grid>
       </Paper>
@@ -84,16 +87,16 @@ class Profile extends React.Component<Props> {
     const { classes, onDelete, onCopy } = this.props;
     if (onDelete || onCopy) {
       return (
-        <div className={classes.actionBar}>
+        <div>
           {onCopy && (
-            <IconButton className={classes.deleteIcon} onClick={this.handleCopyClick}>
+            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleCopyClick}>
               <Icon fontSize="small">content_copy</Icon>
-            </IconButton>
+            </Button>
           )}
           {onDelete && (
-            <IconButton className={classes.deleteIcon} onClick={this.handleDeleteClick}>
+            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleDeleteClick}>
               <Icon fontSize="small">delete</Icon>
-            </IconButton>
+            </Button>
           )}
         </div>
       );

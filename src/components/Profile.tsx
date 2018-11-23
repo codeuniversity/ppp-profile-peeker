@@ -13,6 +13,7 @@ import {
   Button,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
+import Code from "./Code";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -25,10 +26,6 @@ const styles = (theme: Theme) =>
     },
     actionText: {
       textAlign: "right",
-    },
-    scriptText: {
-      fontFamily: "monospace",
-      whiteSpace: "pre",
     },
     errorText: {
       color: red[600],
@@ -66,10 +63,9 @@ class Profile extends React.Component<Props> {
 
             {profile.error ? (
               <>
-                <Typography variant="body2" className={classes.scriptText}>
-                  {profile.script}
+                <Typography variant="body1">
+                  <Code>{profile.script}</Code>
                 </Typography>
-                <Divider />
                 <Typography variant="body2" color="secondary" className={classes.errorText}>
                   {profile.error}
                 </Typography>

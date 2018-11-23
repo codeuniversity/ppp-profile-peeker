@@ -1,16 +1,11 @@
 import * as React from "react";
 import ProfilerApi, { MetaElement } from "../services/ProfilerApi";
 import { Typography, Grid, Theme, WithStyles, createStyles, withStyles, Divider, TextField } from "@material-ui/core";
-import grey from "@material-ui/core/colors/grey";
+import Code from "./Code";
+
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      padding: theme.spacing.unit,
-    },
-    nameSpan: {
-      margin: theme.spacing.unit,
-      borderRadius: 3,
-      backgroundColor: grey[300],
       padding: theme.spacing.unit,
     },
     typeSpan: {
@@ -74,7 +69,7 @@ class CreateScriptDialog extends React.Component<Props, State> {
         {metaElements.map(element => (
           <Grid item key={element.name}>
             <Typography variant="body1">
-              <code className={classes.nameSpan}>{element.name}</code>
+              <Code margin="0 8px">{element.name}</Code>
               <span className={classes.typeSpan}>{element.type}</span>
             </Typography>
           </Grid>

@@ -64,7 +64,7 @@ class Profile extends React.Component<Props> {
             {profile.error ? (
               <>
                 <Typography variant="body1">
-                  <Code>{profile.script}</Code>
+                  <Code display="block">{profile.script}</Code>
                 </Typography>
                 <Typography variant="body2" color="secondary" className={classes.errorText}>
                   {profile.error}

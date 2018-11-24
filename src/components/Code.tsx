@@ -8,7 +8,6 @@ const styles = (theme: Theme) =>
       backgroundColor: grey[300],
       padding: theme.spacing.unit,
       borderRadius: 3,
-      display: "inline-block",
     },
     code: {
       whiteSpace: "pre-wrap",
@@ -17,11 +16,12 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   margin?: string | number;
+  display?: "block" | "inline-block";
 }
 
-const Code: React.SFC<Props> = ({ classes, children, margin }) => {
+const Code: React.SFC<Props> = ({ classes, children, margin, display = "inline-block" }) => {
   return (
-    <div className={classes.container} style={{ margin }}>
+    <div className={classes.container} style={{ margin, display }}>
       <code className={classes.code}>{children}</code>
     </div>
   );

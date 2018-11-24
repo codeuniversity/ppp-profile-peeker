@@ -1,6 +1,6 @@
 import * as React from "react";
 import NotificationContext, { NotificationProps } from "./NotificationContext";
-import Without from "./utility/Without";
+import Without from "../utility/Without";
 import { Snackbar, SnackbarContent, Theme, createStyles, WithStyles, withStyles, Button } from "@material-ui/core";
 import green from "@material-ui/core/colors/green";
 type NotificationRenderProps = Without<NotificationProps, "timeout"> & {

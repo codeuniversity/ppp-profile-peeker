@@ -22,7 +22,7 @@ const ConfigList: React.SFC<Props> = props => {
   return (
     <Grid container spacing={16} justify={"space-around"} alignItems="stretch" className={classes.container}>
       {configs.map(config => (
-        <Grid key={config.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+        <Grid key={config.id} item xs={12} sm={6} md={4} lg={4} xl={2}>
           <ConfigItem
             onDownload={onDownload}
             config={config}

@@ -1,6 +1,6 @@
 import React, { ComponentType } from "react";
-import ProfilerApiContext, { ProfilerApiContextValue } from "../ProfilerApiContext";
-import { ProfileState } from "../../services/ProfilerTypes";
+import ProfilerApiContext, { ProfilerApiContextValue } from "../contexts/ProfilerApiContext";
+import { ProfileState } from "../services/ProfilerTypes";
 
 export interface ProfilerApiContextProps extends ProfilerApiContextValue {
   profileExists(profileId: string): boolean;

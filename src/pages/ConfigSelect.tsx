@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Config } from "../services/LibraryTypes";
-import withLibraryApi from "../components/utility/withLibraryApi";
-import { LibraryApiContextValue } from "../components/LibraryApiContext";
+import withLibraryApi from "../utility/withLibraryApi";
+import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 import ConfigList from "../components/ConfigList";
-import withProfilerApi, { ProfilerApiContextProps } from "../components/utility/withProfilerApi";
+import withProfilerApi, { ProfilerApiContextProps } from "../utility/withProfilerApi";
 import { Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
 import ProfilerApi from "../services/ProfilerApi";
 

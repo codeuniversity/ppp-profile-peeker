@@ -2,10 +2,10 @@ import * as React from "react";
 import LibraryApiContext from "./LibraryApiContext";
 import LibraryApi from "../services/LibraryApi";
 import { UserInfo } from "../services/LibraryTypes";
-import withNotifications from "./utility/withNotifications";
+import withNotifications from "../utility/withNotifications";
 import { NotificationContextValue } from "./NotificationContext";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { loginRoute } from "./Routes";
+import { loginRoute } from "../components/Routes";
 
 type Props = NotificationContextValue &
   RouteComponentProps<{}> & {

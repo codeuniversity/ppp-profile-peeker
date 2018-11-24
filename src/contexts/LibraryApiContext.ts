@@ -1,4 +1,4 @@
-import { UserInfo } from "./../services/LibraryTypes";
+import { UserInfo } from "../services/LibraryTypes";
 import React from "react";
 import LibraryApi from "../services/LibraryApi";
 

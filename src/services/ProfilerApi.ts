@@ -1,10 +1,28 @@
-import { Message, isProfileUpdate, ProfileState } from "./ProfilerTypes";
+import { Without } from "./../utility/Without";
+import { Message, isProfileUpdate, ProfileState, RawMetaElement } from "./ProfilerTypes";
 const profilerLocation = "localhost:4000";
 const profilerHttpUrl = `http://${profilerLocation}`;
 const profilerWsUrl = `ws://${profilerLocation}`;
 
 type ProfileUpdateHandler = (profileId: string, profileState: ProfileState) => void;
 type ProfileDeleteHandler = (profileId: string) => void;
+
+const mhistTypeNumberToName = {
+  [1]: "number",
+  [2]: "string",
+};
+
+export interface MetaElement extends Without<RawMetaElement, "type"> {
+  type: string;
+}
+
+function convertMhistMeta(metaInfo: RawMetaElement[]) {
+  return metaInfo.map(rawMetaElement => {
+    const type = mhistTypeNumberToName[rawMetaElement.type];
+
+    return { type: type || `unknown type: ${rawMetaElement.type}`, name: rawMetaElement.name } as MetaElement;
+  });
+}
 
 export default class ProfilerApi {
   public constructor() {}
@@ -47,6 +65,11 @@ export default class ProfilerApi {
     await fetch(`${profilerHttpUrl}/profiles/${profileId}`, {
       method: "DELETE",
     });
+  };
+
+  public static fetchMeta = async () => {
+    const rawMetaElements = (await fetch(`${profilerHttpUrl}/meta`).then(resp => resp.json())) as RawMetaElement[];
+    return convertMhistMeta(rawMetaElements);
   };
 
   private handleMessage = (message: Message) => {

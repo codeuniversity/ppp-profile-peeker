@@ -10,6 +10,7 @@ import {
   Grid,
   Divider,
   Button,
+  Tooltip,
 } from "@material-ui/core";
 import { Config, getNamesArrayFromNamesFilterString } from "../services/LibraryTypes";
 import Stars from "./Stars";
@@ -97,8 +98,22 @@ class ConfigItem extends React.Component<Props, State> {
           <Grid item>
             <Divider className={classes.divider} />
             <div>
-              <Stars hasStared={config.has_voted} starCount={config.vote_count} onClick={this.starsClickHandler()} />
-              {!alreadyDownloaded && <DownloadConfig onClick={this.downloadConfig} />}
+              <Tooltip title="star">
+                <span>
+                  <Stars
+                    hasStared={config.has_voted}
+                    starCount={config.vote_count}
+                    onClick={this.starsClickHandler()}
+                  />
+                </span>
+              </Tooltip>
+              {!alreadyDownloaded && (
+                <Tooltip title="download">
+                  <span>
+                    <DownloadConfig onClick={this.downloadConfig} />
+                  </span>
+                </Tooltip>
+              )}
             </div>
           </Grid>
         </Grid>

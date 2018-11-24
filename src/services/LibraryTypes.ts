@@ -3,15 +3,18 @@ import { Category } from "./LibraryTypes";
 export type CommaSeperatedStrings = string;
 
 export type NamesFilter = "" | CommaSeperatedStrings;
-export interface Config {
-  id: string;
+export interface ConfigPostAttributes {
   title: string;
   description?: string;
   script: string;
+  names_filter: NamesFilter;
+}
+
+export interface Config extends ConfigPostAttributes {
+  id: string;
   vote_count: number;
   has_voted: boolean;
   categories: Category[];
-  names_filter: NamesFilter;
 }
 
 export interface Category {
@@ -41,4 +44,8 @@ export function getNamesArrayFromNamesFilterString(namesFilter: NamesFilter): st
     return [];
   }
   return namesFilter.split(",");
+}
+
+export function namesArrayToNamesFilterString(names: string[]): string {
+  return names.join(",");
 }

@@ -1,4 +1,4 @@
-import { LibraryCredentials, Config, Vote, UserInfo } from "./LibraryTypes";
+import { LibraryCredentials, Config, Vote, UserInfo, ConfigPostAttributes } from "./LibraryTypes";
 
 const libraryUrl = "http://localhost:3000";
 
@@ -44,6 +44,11 @@ export default class LibraryApi {
       return (await response.json()) as Promise<Config[]>;
     }
     return;
+  };
+
+  public postConfig = async (config: ConfigPostAttributes) => {
+    const response = await this.fetch("configs", { method: "POST" }, config);
+    this.checkStatus(response);
   };
 
   public voteForConfig = async (configId: string) => {

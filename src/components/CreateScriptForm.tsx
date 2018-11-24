@@ -81,15 +81,13 @@ class CreateScriptDialog extends React.Component<Props, State> {
       <Grid container direction="column" spacing={8}>
         {metaElements.map(element => (
           <Grid item key={element.name}>
-            <Typography variant="body1">
-              <Checkbox
-                color="primary"
-                checked={this.isInFilter(element.name)}
-                onChange={this.getFilterToggleForName(element.name)}
-              />
-              <Code margin="0 8px">{element.name}</Code>
-              <span className={classes.typeSpan}>{element.type}</span>
-            </Typography>
+            <Checkbox
+              color="primary"
+              checked={this.isInFilter(element.name)}
+              onChange={this.getFilterToggleForName(element.name)}
+            />
+            <Code margin="0 8px">{element.name}</Code>
+            <span className={classes.typeSpan}>{element.type}</span>
           </Grid>
         ))}
       </Grid>

@@ -15,6 +15,8 @@ import {
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import Code from "./Code";
+import withLibraryApi from "../utility/withLibraryApi";
+import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,12 +45,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
-  profile: ProfileState;
-  id: string;
-  onDelete?(id: string): void;
-  onCopy?(id: string): void;
-}
+type Props = WithStyles<typeof styles> &
+  LibraryApiContextValue & {
+    profile: ProfileState;
+    id: string;
+    onDelete?(id: string): void;
+    onCopy?(id: string): void;
+    onUpload?(id: string): void;
+  };
 
 class Profile extends React.Component<Props> {
   public render() {
@@ -85,20 +89,50 @@ class Profile extends React.Component<Props> {
   }
 
   private renderActionBar = () => {
-    const { classes, onDelete, onCopy } = this.props;
-    if (onDelete || onCopy) {
+    const { classes, onDelete, onCopy, onUpload, profile, isLoggedIn } = this.props;
+    if (onDelete || onCopy || onUpload) {
       return (
         <div>
           {onCopy && (
-            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleCopyClick}>
-              <Icon fontSize="small">content_copy</Icon>
-            </Button>
+            <Tooltip title="copy">
+              <Button
+                variant="outlined"
+                size="small"
+                className={classes.action}
+                onClick={this.handleActionClick(onCopy)}
+              >
+                <Icon fontSize="small">content_copy</Icon>
+              </Button>
+            </Tooltip>
           )}
           {onDelete && (
-            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleDeleteClick}>
-              <Icon fontSize="small">delete</Icon>
-            </Button>
+            <Tooltip title="delete">
+              <Button
+                variant="outlined"
+                size="small"
+                className={classes.action}
+                onClick={this.handleActionClick(onDelete)}
+              >
+                <Icon fontSize="small">delete</Icon>
+              </Button>
+            </Tooltip>
           )}
+          {onUpload &&
+            profile.definition.is_local && (
+              <Tooltip title={!isLoggedIn ? "you need to be logged in" : "share with others"}>
+                <span>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className={classes.action}
+                    onClick={this.handleActionClick(onUpload)}
+                    disabled={!isLoggedIn}
+                  >
+                    <Icon fontSize="small">cloud_upload</Icon>
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
         </div>
       );
     }
@@ -117,19 +151,12 @@ class Profile extends React.Component<Props> {
     );
   };
 
-  private handleDeleteClick = () => {
-    const { onDelete, id } = this.props;
-    if (onDelete) {
-      onDelete(id);
-    }
-  };
-
-  private handleCopyClick = () => {
-    const { onCopy, id } = this.props;
-    if (onCopy) {
-      onCopy(id);
-    }
+  private handleActionClick = (action: (id: string) => void) => {
+    return () => {
+      const { id } = this.props;
+      action(id);
+    };
   };
 }
 
-export default withStyles(styles)(Profile);
+export default withStyles(styles)(withLibraryApi(Profile));

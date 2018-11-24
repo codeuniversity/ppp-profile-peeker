@@ -19,6 +19,7 @@ import green from "@material-ui/core/colors/green";
 import { NavLink } from "react-router-dom";
 import { dashboardRoute } from "./Routes";
 import { ProfileDefinition } from "../services/ProfilerTypes";
+import Code from "./Code";
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
@@ -31,8 +32,6 @@ const styles = (theme: Theme) =>
       width: "100%",
     },
     script: {
-      fontFamily: "monospace",
-      whiteSpace: "pre",
       overflowX: "scroll",
     },
     divider: {
@@ -90,9 +89,10 @@ class ConfigItem extends React.Component<Props, State> {
             </Grid>
             <Typography variant="h5">{config.title}</Typography>
             <Typography variant="body1">{config.description}</Typography>
-            <Typography className={classes.script} variant="body2">
+
+            <Code className={classes.script} display="block">
               {config.script}
-            </Typography>
+            </Code>
           </Grid>
           <Grid item>
             <Divider className={classes.divider} />

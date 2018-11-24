@@ -1,9 +1,15 @@
 export interface ProfileState {
-  script: string;
-  title?: string;
-  description?: string;
-  action?: string;
-  error?: string;
+  definition: {
+    id: string;
+    eval_script: string;
+    is_local?: boolean;
+  };
+  display: {
+    title?: string;
+    description?: string;
+    action?: string;
+    error?: string;
+  };
 }
 
 interface ProfileUpdate {

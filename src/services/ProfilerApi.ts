@@ -54,10 +54,10 @@ export default class ProfilerApi {
     });
   };
 
-  public static postProfile = async (id: string, evalScript: string) => {
+  public static postProfile = async (id: string, evalScript: string, isLocal: boolean = false) => {
     await fetch(`${profilerHttpUrl}/profiles`, {
       method: "POST",
-      body: JSON.stringify({ id, eval_script: evalScript }),
+      body: JSON.stringify({ id, eval_script: evalScript, is_local: isLocal }),
     });
   };
 

@@ -11,6 +11,7 @@ import {
   Divider,
   Grid,
   Button,
+  Tooltip,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import Code from "./Code";
@@ -37,6 +38,9 @@ const styles = (theme: Theme) =>
     divider: {
       margin: `${theme.spacing.unit}px 0`,
     },
+    infoIcon: {
+      cursor: "pointer",
+    },
   });
 
 interface Props extends WithStyles<typeof styles> {
@@ -52,22 +56,23 @@ class Profile extends React.Component<Props> {
     return (
       <Paper className={classes.card}>
         <Grid className={classes.container} container direction="column" justify="space-between">
+          <Grid item>{this.renderProfileInfo()}</Grid>
           <Grid item>
-            <Typography variant="h5">{profile.title}</Typography>
-            <Typography variant="body2">{profile.description}</Typography>
+            <Typography variant="h5">{profile.display.title}</Typography>
+            <Typography variant="body2">{profile.display.description}</Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1" className={classes.actionText}>
-              {profile.action}
+              {profile.display.action}
             </Typography>
 
-            {profile.error ? (
+            {profile.display.error ? (
               <>
                 <Typography variant="body1">
-                  <Code display="block">{profile.script}</Code>
+                  <Code display="block">{profile.definition.eval_script}</Code>
                 </Typography>
                 <Typography variant="body2" color="secondary" className={classes.errorText}>
-                  {profile.error}
+                  {profile.display.error}
                 </Typography>
               </>
             ) : null}
@@ -100,12 +105,25 @@ class Profile extends React.Component<Props> {
     return null;
   };
 
+  private renderProfileInfo = () => {
+    const { profile, classes } = this.props;
+
+    return (
+      <Tooltip
+        title={profile.definition.is_local ? "you defined this yourself" : "you downloaded this from the library"}
+      >
+        <Icon className={classes.infoIcon}>{profile.definition.is_local ? "cloud_off" : "cloud_queue"}</Icon>
+      </Tooltip>
+    );
+  };
+
   private handleDeleteClick = () => {
     const { onDelete, id } = this.props;
     if (onDelete) {
       onDelete(id);
     }
   };
+
   private handleCopyClick = () => {
     const { onCopy, id } = this.props;
     if (onCopy) {

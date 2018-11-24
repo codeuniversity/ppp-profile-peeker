@@ -136,7 +136,7 @@ class App extends React.Component<Props, State> {
   private handleProfileCopyClick = (id: string) => {
     const { profiles } = this.props;
     const profile = profiles[id];
-    this.setState({ newScript: profile.script, scriptDialogOpen: true });
+    this.setState({ newScript: profile.definition.eval_script, scriptDialogOpen: true });
   };
 
   private onScriptSave = async () => {
@@ -144,7 +144,7 @@ class App extends React.Component<Props, State> {
     const { newScript } = this.state;
     this.closeScriptDialog();
     const notificationId = addNotification({ message: "Creating Script", type: "success" });
-    await ProfilerApi.postProfile(new Date().toISOString(), newScript);
+    await ProfilerApi.postProfile(new Date().toISOString(), newScript, true);
     removeNotification(notificationId);
     addNotification({ type: "success", message: "Script Created!", timeout: 5000 });
   };

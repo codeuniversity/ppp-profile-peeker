@@ -26,6 +26,12 @@ const styles = (theme: Theme) =>
     error: {
       backgroundColor: theme.palette.grey[800],
     },
+    buttonsuccess: {
+      color: theme.palette.primary.contrastText,
+    },
+    buttonerror: {
+      color: theme.palette.secondary.contrastText,
+    },
   });
 
 interface Props extends WithStyles<typeof styles> {}
@@ -93,7 +99,7 @@ class NotificationProvider extends React.Component<Props, State> {
                 this.removeNotification(notificationId);
               };
               action = (
-                <Button variant="text" onClick={onClick} color="secondary">
+                <Button variant="outlined" onClick={onClick} className={classes[`button${type}`]}>
                   {ationLabel}
                 </Button>
               );

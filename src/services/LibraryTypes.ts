@@ -1,4 +1,8 @@
 import { Category } from "./LibraryTypes";
+
+export type CommaSeperatedStrings = string;
+
+export type NamesFilter = "" | CommaSeperatedStrings;
 export interface Config {
   id: string;
   title: string;
@@ -7,6 +11,7 @@ export interface Config {
   vote_count: number;
   has_voted: boolean;
   categories: Category[];
+  names_filter: NamesFilter;
 }
 
 export interface Category {
@@ -29,4 +34,11 @@ export interface UserInfo {
   image: string;
   name: string;
   nickname: string;
+}
+
+export function getNamesArrayFromNamesFilterString(namesFilter: NamesFilter): string[] {
+  if (namesFilter === "") {
+    return [];
+  }
+  return namesFilter.split(",");
 }

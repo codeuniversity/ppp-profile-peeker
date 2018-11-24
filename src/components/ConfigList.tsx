@@ -2,6 +2,7 @@ import * as React from "react";
 import { Theme, createStyles, withStyles, Grid, WithStyles } from "@material-ui/core";
 import { Config } from "../services/LibraryTypes";
 import ConfigItem from "./ConfigItem";
+import { ProfileDefinition } from "../services/ProfilerTypes";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -14,7 +15,7 @@ interface Props extends WithStyles<typeof styles> {
   configs: Config[];
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
   profileExists: (profileId: string) => boolean;
-  onDownload: (configId: string, evalScript: string) => Promise<void>;
+  onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
 }
 
 const ConfigList: React.SFC<Props> = props => {

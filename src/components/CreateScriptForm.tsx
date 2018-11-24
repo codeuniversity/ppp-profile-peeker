@@ -1,7 +1,18 @@
 import * as React from "react";
 import ProfilerApi, { MetaElement } from "../services/ProfilerApi";
-import { Typography, Grid, Theme, WithStyles, createStyles, withStyles, Divider, TextField } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Theme,
+  WithStyles,
+  createStyles,
+  withStyles,
+  Divider,
+  TextField,
+  Checkbox,
+} from "@material-ui/core";
 import Code from "./Code";
+import { Filter } from "../services/ProfilerTypes";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -21,7 +32,9 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   script: string;
+  filter: Filter;
   onScriptChange: (newScript: string) => void;
+  onFilterChange: (newFilter: Filter) => void;
 }
 
 const loadingState = { loaded: false };
@@ -54,7 +67,7 @@ class CreateScriptDialog extends React.Component<Props, State> {
     }
     return (
       <div className={classes.container}>
-        <Typography variant="body1">You have the following data types available to process:</Typography>
+        <Typography variant="body1">Select what data you want to process with this script</Typography>
         {this.renderMetaInfo(state.metaElements)}
         <Divider className={classes.divider} />
         {this.renderForm()}
@@ -69,6 +82,11 @@ class CreateScriptDialog extends React.Component<Props, State> {
         {metaElements.map(element => (
           <Grid item key={element.name}>
             <Typography variant="body1">
+              <Checkbox
+                color="primary"
+                checked={this.isInFilter(element.name)}
+                onChange={this.getFilterToggleForName(element.name)}
+              />
               <Code margin="0 8px">{element.name}</Code>
               <span className={classes.typeSpan}>{element.type}</span>
             </Typography>
@@ -103,6 +121,24 @@ class CreateScriptDialog extends React.Component<Props, State> {
       metaElements,
       loaded: true,
     } as LoadedState);
+  };
+
+  private isInFilter = (name: string): boolean => {
+    const { filter } = this.props;
+    return filter.names.some(nameInFilter => nameInFilter === name);
+  };
+
+  private getFilterToggleForName = (name: string) => {
+    return () => {
+      const { filter, onFilterChange } = this.props;
+      let namesCopy = filter.names.slice();
+      if (this.isInFilter(name)) {
+        namesCopy = namesCopy.filter(n => n !== name);
+      } else {
+        namesCopy.push(name);
+      }
+      onFilterChange({ names: namesCopy });
+    };
   };
 }
 export default withStyles(styles)(CreateScriptDialog);

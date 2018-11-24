@@ -11,13 +11,15 @@ import {
   Divider,
   Button,
 } from "@material-ui/core";
-import { Config } from "../services/LibraryTypes";
+import { Config, getNamesArrayFromNamesFilterString } from "../services/LibraryTypes";
 import Stars from "./Stars";
 import DownloadConfig from "./DownloadConfig";
 import DownloadedIcon from "@material-ui/icons/CloudDone";
 import green from "@material-ui/core/colors/green";
 import { NavLink } from "react-router-dom";
 import { dashboardRoute } from "./Routes";
+import { ProfileDefinition } from "../services/ProfilerTypes";
+import Code from "./Code";
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
@@ -30,8 +32,6 @@ const styles = (theme: Theme) =>
       width: "100%",
     },
     script: {
-      fontFamily: "monospace",
-      whiteSpace: "pre",
       overflowX: "scroll",
     },
     divider: {
@@ -50,7 +50,7 @@ interface Props extends WithStyles<typeof styles> {
   config: Config;
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
   alreadyDownloaded: boolean;
-  onDownload: (configId: string, evalScript: string) => Promise<void>;
+  onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
 }
 
 interface State {}
@@ -89,9 +89,10 @@ class ConfigItem extends React.Component<Props, State> {
             </Grid>
             <Typography variant="h5">{config.title}</Typography>
             <Typography variant="body1">{config.description}</Typography>
-            <Typography className={classes.script} variant="body2">
+
+            <Code className={classes.script} display="block">
               {config.script}
-            </Typography>
+            </Code>
           </Grid>
           <Grid item>
             <Divider className={classes.divider} />
@@ -107,7 +108,12 @@ class ConfigItem extends React.Component<Props, State> {
 
   private downloadConfig = () => {
     const { config, onDownload } = this.props;
-    onDownload(config.id, config.script);
+    onDownload({
+      id: config.id,
+      eval_script: config.script,
+      filter: { names: getNamesArrayFromNamesFilterString(config.names_filter) },
+      is_local: false,
+    });
   };
 
   private starsClickHandler = () => {

@@ -1,15 +1,22 @@
+export interface ProfileDefinition {
+  id: string;
+  eval_script: string;
+  is_local: boolean;
+  filter: Filter;
+}
+
 export interface ProfileState {
-  definition: {
-    id: string;
-    eval_script: string;
-    is_local?: boolean;
-  };
+  definition: ProfileDefinition;
   display: {
     title?: string;
     description?: string;
     action?: string;
     error?: string;
   };
+}
+
+export interface Filter {
+  names: string[];
 }
 
 interface ProfileUpdate {

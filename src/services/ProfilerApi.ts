@@ -1,3 +1,4 @@
+import { ProfileDefinition } from "../services/ProfilerTypes";
 import { Without } from "./../utility/Without";
 import { Message, isProfileUpdate, ProfileState, RawMetaElement } from "./ProfilerTypes";
 const profilerLocation = "localhost:4000";
@@ -54,10 +55,10 @@ export default class ProfilerApi {
     });
   };
 
-  public static postProfile = async (id: string, evalScript: string, isLocal: boolean = false) => {
+  public static postProfile = async (profileDefinition: ProfileDefinition) => {
     await fetch(`${profilerHttpUrl}/profiles`, {
       method: "POST",
-      body: JSON.stringify({ id, eval_script: evalScript, is_local: isLocal }),
+      body: JSON.stringify(profileDefinition),
     });
   };
 

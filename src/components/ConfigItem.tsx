@@ -18,6 +18,7 @@ import DownloadedIcon from "@material-ui/icons/CloudDone";
 import green from "@material-ui/core/colors/green";
 import { NavLink } from "react-router-dom";
 import { dashboardRoute } from "./Routes";
+import { ProfileDefinition } from "../services/ProfilerTypes";
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
@@ -50,7 +51,7 @@ interface Props extends WithStyles<typeof styles> {
   config: Config;
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
   alreadyDownloaded: boolean;
-  onDownload: (configId: string, evalScript: string) => Promise<void>;
+  onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
 }
 
 interface State {}
@@ -107,7 +108,7 @@ class ConfigItem extends React.Component<Props, State> {
 
   private downloadConfig = () => {
     const { config, onDownload } = this.props;
-    onDownload(config.id, config.script);
+    onDownload({ id: config.id, eval_script: config.script, filter: { names: [] }, is_local: false });
   };
 
   private starsClickHandler = () => {

@@ -20,10 +20,14 @@ import { configSelectRoute } from "../components/Routes";
 import CreateScriptDialog from "../components/CreateScriptForm";
 import withNotifications from "../utility/withNotifications";
 import { NotificationContextValue } from "../contexts/NotificationContext";
+import { Filter } from "../services/ProfilerTypes";
 interface State {
   scriptDialogOpen: boolean;
   newScript: string;
+  newFilter: Filter;
 }
+
+const initialFilter = Object.freeze({ names: [] });
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,6 +50,7 @@ class App extends React.Component<Props, State> {
     this.state = {
       scriptDialogOpen: false,
       newScript: "",
+      newFilter: initialFilter,
     };
   }
 
@@ -107,11 +112,16 @@ class App extends React.Component<Props, State> {
   };
 
   private renderCreateScriptDialog = () => {
-    const { scriptDialogOpen, newScript } = this.state;
+    const { scriptDialogOpen, newScript, newFilter } = this.state;
     return (
       <Dialog open={scriptDialogOpen} onClose={this.closeScriptDialog}>
         <DialogTitle> Define your script</DialogTitle>
-        <CreateScriptDialog script={newScript} onScriptChange={this.onScriptChange} />
+        <CreateScriptDialog
+          script={newScript}
+          onScriptChange={this.onScriptChange}
+          filter={newFilter}
+          onFilterChange={this.onFilterChange}
+        />
         <DialogActions>
           <Button onClick={this.closeScriptDialog}>Cancel</Button>
           <Button variant="contained" color="primary" onClick={this.onScriptSave}>
@@ -126,25 +136,38 @@ class App extends React.Component<Props, State> {
     this.setState({ scriptDialogOpen: true });
   };
   private closeScriptDialog = () => {
-    this.setState({ scriptDialogOpen: false, newScript: "" });
+    this.setState({ scriptDialogOpen: false, newScript: "", newFilter: initialFilter });
   };
 
   private onScriptChange = (newScript: string) => {
     this.setState({ newScript });
   };
 
+  private onFilterChange = (newFilter: Filter) => {
+    this.setState({ newFilter });
+  };
+
   private handleProfileCopyClick = (id: string) => {
     const { profiles } = this.props;
     const profile = profiles[id];
-    this.setState({ newScript: profile.definition.eval_script, scriptDialogOpen: true });
+    this.setState({
+      newScript: profile.definition.eval_script,
+      newFilter: profile.definition.filter,
+      scriptDialogOpen: true,
+    });
   };
 
   private onScriptSave = async () => {
     const { addNotification, removeNotification } = this.props;
-    const { newScript } = this.state;
+    const { newScript, newFilter } = this.state;
     this.closeScriptDialog();
     const notificationId = addNotification({ message: "Creating Script", type: "success" });
-    await ProfilerApi.postProfile(new Date().toISOString(), newScript, true);
+    await ProfilerApi.postProfile({
+      id: new Date().toISOString(),
+      eval_script: newScript,
+      is_local: true,
+      filter: newFilter,
+    });
     removeNotification(notificationId);
     addNotification({ type: "success", message: "Script Created!", timeout: 5000 });
   };

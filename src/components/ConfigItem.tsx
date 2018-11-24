@@ -11,7 +11,7 @@ import {
   Divider,
   Button,
 } from "@material-ui/core";
-import { Config } from "../services/LibraryTypes";
+import { Config, getNamesArrayFromNamesFilterString } from "../services/LibraryTypes";
 import Stars from "./Stars";
 import DownloadConfig from "./DownloadConfig";
 import DownloadedIcon from "@material-ui/icons/CloudDone";
@@ -108,7 +108,12 @@ class ConfigItem extends React.Component<Props, State> {
 
   private downloadConfig = () => {
     const { config, onDownload } = this.props;
-    onDownload({ id: config.id, eval_script: config.script, filter: { names: [] }, is_local: false });
+    onDownload({
+      id: config.id,
+      eval_script: config.script,
+      filter: { names: getNamesArrayFromNamesFilterString(config.names_filter) },
+      is_local: false,
+    });
   };
 
   private starsClickHandler = () => {

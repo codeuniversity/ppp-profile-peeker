@@ -12,6 +12,9 @@ import {
   Button,
   Tooltip,
   Icon,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
 } from "@material-ui/core";
 import { Config, getNamesArrayFromNamesFilterString, UserInfo } from "../services/LibraryTypes";
 import Stars from "./Stars";
@@ -23,17 +26,21 @@ import { dashboardRoute } from "./Routes";
 import { ProfileDefinition } from "../services/ProfilerTypes";
 import Code from "./Code";
 import classnames from "classnames";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing.unit,
+      padding: 2 * theme.spacing.unit,
       height: "100%",
       overflowX: "hidden",
     },
     container: {
       height: "100%",
       width: "100%",
+    },
+    scriptHeading: {
+      textAlign: "right",
     },
     script: {
       overflowX: "scroll",
@@ -50,6 +57,10 @@ const styles = (theme: Theme) =>
     },
     navLink: {
       textDecoration: "none",
+    },
+    expansionPanelRoot: {
+      padding: 0,
+      margin: 0,
     },
   });
 
@@ -89,12 +100,32 @@ class ConfigItem extends React.Component<Props, State> {
             </Grid>
             <Typography variant="h5">{config.title}</Typography>
             <Typography variant="body1">{config.description}</Typography>
-
-            <Code className={classes.script} display="block">
-              {config.script}
-            </Code>
           </Grid>
+
           <Grid item>
+            <ExpansionPanel
+              elevation={0}
+              classes={{ root: classes.expansionPanelRoot, expanded: classes.expansionPanelRoot }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                classes={{
+                  content: classes.expansionPanelRoot,
+                  expanded: classes.expansionPanelRoot,
+                  expandIcon: classes.expansionPanelRoot,
+                  root: classes.expansionPanelRoot,
+                }}
+              >
+                <Typography variant="caption" className={classes.scriptHeading}>
+                  Code
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails classes={{ root: classes.expansionPanelRoot }}>
+                <Code className={classes.script} fullWidth>
+                  {config.script}
+                </Code>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
             <Divider className={classes.divider} />
             <div>
               <Tooltip title="star">

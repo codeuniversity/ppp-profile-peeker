@@ -10,6 +10,10 @@ const styles = (theme: Theme) =>
       padding: theme.spacing.unit,
       borderRadius: 3,
     },
+    fullWidth: {
+      width: "100%",
+      display: "block",
+    },
     code: {
       whiteSpace: "pre",
     },
@@ -17,13 +21,13 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   margin?: string | number;
-  display?: "block" | "inline-block";
+  fullWidth?: boolean;
   className?: string;
 }
 
-const Code: React.SFC<Props> = ({ classes, children, margin, className, display = "inline-block" }) => {
+const Code: React.SFC<Props> = ({ classes, children, margin, className, fullWidth = false }) => {
   return (
-    <div className={classnames(classes.container, className)} style={{ margin, display }}>
+    <div className={classnames(classes.container, fullWidth ? classes.fullWidth : "", className)} style={{ margin }}>
       <code className={classes.code}>{children}</code>
     </div>
   );

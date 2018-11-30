@@ -77,7 +77,7 @@ class Profile extends React.Component<Props> {
             {profile.display.error ? (
               <>
                 <Typography variant="body1">
-                  <Code display="block">{profile.definition.eval_script}</Code>
+                  <Code fullWidth>{profile.definition.eval_script}</Code>
                 </Typography>
                 <Typography variant="body2" color="secondary" className={classes.errorText}>
                   {profile.display.error}

@@ -9,6 +9,7 @@ const styles = (theme: Theme) =>
       backgroundColor: grey[200],
       padding: theme.spacing.unit,
       borderRadius: 3,
+      display: "inline-block",
     },
     fullWidth: {
       width: "100%",

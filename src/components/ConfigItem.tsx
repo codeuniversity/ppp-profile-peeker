@@ -121,9 +121,14 @@ class ConfigItem extends React.Component<Props, State> {
                 </Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails classes={{ root: classes.expansionPanelRoot }}>
-                <Code className={classes.script} fullWidth>
-                  {config.script}
-                </Code>
+                <Grid container direction="column">
+                  <Grid item>
+                    <Code className={classes.script} fullWidth>
+                      {config.script}
+                    </Code>
+                  </Grid>
+                  <Grid item>{this.renderFilterInfo()}</Grid>
+                </Grid>
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Divider className={classes.divider} />
@@ -181,12 +186,14 @@ class ConfigItem extends React.Component<Props, State> {
     if (this.isByCurrentUser()) {
       const classname = classnames(classes.downloadedIcon, classes.createdByUserIcon);
       if (alreadyDownloaded) {
-        <NavLink to={dashboardRoute} className={classes.navLink}>
-          <Button variant="text" size="small">
-            <DownloadedIcon className={classname} />
-            You shared this and use this
-          </Button>
-        </NavLink>;
+        return (
+          <NavLink to={dashboardRoute} className={classes.navLink}>
+            <Button variant="text" size="small">
+              <DownloadedIcon className={classname} />
+              You shared this and use this
+            </Button>
+          </NavLink>
+        );
       }
       return (
         <Button variant="text">
@@ -206,6 +213,26 @@ class ConfigItem extends React.Component<Props, State> {
       );
     }
     return null;
+  };
+
+  private renderFilterInfo = () => {
+    const { config } = this.props;
+
+    const filterNames = getNamesArrayFromNamesFilterString(config.names_filter);
+    if (filterNames.length === 0) {
+      return null;
+    }
+
+    return (
+      <div>
+        <Typography variant="caption">This script processes signal</Typography>
+        {filterNames.map(name => (
+          <Code key={name} margin="8px">
+            {name}
+          </Code>
+        ))}
+      </div>
+    );
   };
 }
 

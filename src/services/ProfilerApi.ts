@@ -85,7 +85,6 @@ export default class ProfilerApi {
     if (isProfileUpdate(data)) {
       if (this.profileUpdateHandler) {
         this.profileUpdateHandler(message.id, data.state);
-        console.log(data.state);
       }
     } else {
       if (this.profileDeleteHandler) {

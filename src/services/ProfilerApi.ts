@@ -62,6 +62,13 @@ export default class ProfilerApi {
     });
   };
 
+  public static updateProfile = async (profileId: string, profileDefinition: Partial<ProfileDefinition>) => {
+    await fetch(`${profilerHttpUrl}/profiles/${profileId}`, {
+      method: "PUT",
+      body: JSON.stringify(profileDefinition),
+    });
+  };
+
   public static deleteProfile = async (profileId: string) => {
     await fetch(`${profilerHttpUrl}/profiles/${profileId}`, {
       method: "DELETE",
@@ -78,6 +85,7 @@ export default class ProfilerApi {
     if (isProfileUpdate(data)) {
       if (this.profileUpdateHandler) {
         this.profileUpdateHandler(message.id, data.state);
+        console.log(data.state);
       }
     } else {
       if (this.profileDeleteHandler) {

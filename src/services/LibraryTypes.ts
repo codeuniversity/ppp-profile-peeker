@@ -3,6 +3,7 @@ import { Category } from "./LibraryTypes";
 export type CommaSeperatedStrings = string;
 
 export type NamesFilter = "" | CommaSeperatedStrings;
+
 export interface ConfigPostAttributes {
   title: string;
   description?: string;
@@ -15,6 +16,7 @@ export interface Config extends ConfigPostAttributes {
   vote_count: number;
   has_voted: boolean;
   categories: Category[];
+  user: UserInfo;
 }
 
 export interface Category {

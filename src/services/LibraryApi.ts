@@ -48,7 +48,10 @@ export default class LibraryApi {
 
   public postConfig = async (config: ConfigPostAttributes) => {
     const response = await this.fetch("configs", { method: "POST" }, config);
-    this.checkStatus(response);
+    if (this.checkStatus(response)) {
+      return (await response.json()) as Config;
+    }
+    return;
   };
 
   public voteForConfig = async (configId: string) => {

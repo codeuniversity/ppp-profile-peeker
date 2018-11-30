@@ -17,6 +17,7 @@ import red from "@material-ui/core/colors/red";
 import Code from "./Code";
 import withLibraryApi from "../utility/withLibraryApi";
 import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
+import green from "@material-ui/core/colors/green";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,6 +43,9 @@ const styles = (theme: Theme) =>
     },
     infoIcon: {
       cursor: "pointer",
+    },
+    infoShared: {
+      color: green[600],
     },
   });
 
@@ -144,7 +148,15 @@ class Profile extends React.Component<Props> {
 
   private renderProfileInfo = () => {
     const { profile, classes } = this.props;
-
+    if (profile.definition.library_id) {
+      return (
+        <Tooltip title="You shared this">
+          <Icon className={classes.infoShared} color="secondary">
+            cloud_upload
+          </Icon>
+        </Tooltip>
+      );
+    }
     return (
       <Tooltip
         title={profile.definition.is_local ? "you defined this yourself" : "you downloaded this from the library"}

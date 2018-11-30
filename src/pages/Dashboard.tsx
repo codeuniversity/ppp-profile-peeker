@@ -217,13 +217,19 @@ class App extends React.Component<Props, State> {
     this.closeConfigDialog();
     const notificationId = addNotification({ message: "Uploading Script...", type: "success" });
     const profile = profiles[configDialogOpenForId!];
-    await libraryApi.postConfig({
+    const configOrUndefined = await libraryApi.postConfig({
       title: newConfigTitle,
       script: profile.definition.eval_script,
       names_filter: namesArrayToNamesFilterString(profile.definition.filter.names),
     });
     removeNotification(notificationId);
-    addNotification({ type: "success", message: "Script Created!", timeout: 5000 });
+    if (configOrUndefined !== undefined) {
+      addNotification({ type: "success", message: "Script Created!", timeout: 5000 });
+
+      ProfilerApi.updateProfile(profile.definition.id, { library_id: configOrUndefined.id });
+      return;
+    }
+    addNotification({ type: "error", message: "Something went wrong", timeout: 5000 });
   };
 }
 

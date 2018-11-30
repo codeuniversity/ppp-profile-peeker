@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Theme, createStyles, withStyles, Grid, WithStyles } from "@material-ui/core";
-import { Config } from "../services/LibraryTypes";
+import { Config, UserInfo } from "../services/LibraryTypes";
 import ConfigItem from "./ConfigItem";
 import { ProfileDefinition } from "../services/ProfilerTypes";
 
@@ -13,13 +13,14 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   configs: Config[];
+  currentUser?: UserInfo;
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
   profileExists: (profileId: string) => boolean;
   onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
 }
 
 const ConfigList: React.SFC<Props> = props => {
-  const { configs, classes, onVoteToggle, profileExists, onDownload } = props;
+  const { configs, classes, onVoteToggle, profileExists, onDownload, currentUser } = props;
   return (
     <Grid container spacing={16} justify={"space-around"} alignItems="stretch" className={classes.container}>
       {configs.map(config => (
@@ -28,6 +29,7 @@ const ConfigList: React.SFC<Props> = props => {
             onDownload={onDownload}
             config={config}
             onVoteToggle={onVoteToggle}
+            currentUser={currentUser}
             alreadyDownloaded={profileExists(config.id)}
           />
         </Grid>

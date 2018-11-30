@@ -11,8 +11,9 @@ import {
   Divider,
   Button,
   Tooltip,
+  Icon,
 } from "@material-ui/core";
-import { Config, getNamesArrayFromNamesFilterString } from "../services/LibraryTypes";
+import { Config, getNamesArrayFromNamesFilterString, UserInfo } from "../services/LibraryTypes";
 import Stars from "./Stars";
 import DownloadConfig from "./DownloadConfig";
 import DownloadedIcon from "@material-ui/icons/CloudDone";
@@ -21,6 +22,8 @@ import { NavLink } from "react-router-dom";
 import { dashboardRoute } from "./Routes";
 import { ProfileDefinition } from "../services/ProfilerTypes";
 import Code from "./Code";
+import classnames from "classnames";
+
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
@@ -42,6 +45,9 @@ const styles = (theme: Theme) =>
       color: green[600],
       marginRight: theme.spacing.unit / 2,
     },
+    createdByUserIcon: {
+      color: theme.palette.secondary.light,
+    },
     navLink: {
       textDecoration: "none",
     },
@@ -49,6 +55,7 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
   config: Config;
+  currentUser?: UserInfo;
   onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
   alreadyDownloaded: boolean;
   onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
@@ -69,15 +76,7 @@ class ConfigItem extends React.Component<Props, State> {
         <Grid className={classes.container} container direction="column" justify="space-between">
           <Grid item style={{ width: "100%" }}>
             <Grid container justify="space-between">
-              <Grid item>
-                {alreadyDownloaded && (
-                  <NavLink to={dashboardRoute} className={classes.navLink}>
-                    <Button variant="text" size="small">
-                      <DownloadedIcon className={classes.downloadedIcon} /> You use this config
-                    </Button>
-                  </NavLink>
-                )}
-              </Grid>
+              <Grid item>{this.renderConfigInfo()}</Grid>
               <Grid item>
                 <Grid container>
                   {config.categories.map(category => (
@@ -139,6 +138,43 @@ class ConfigItem extends React.Component<Props, State> {
       };
     }
     return undefined;
+  };
+
+  private isByCurrentUser = () => {
+    const { currentUser, config } = this.props;
+    return currentUser && currentUser.id === config.user.id;
+  };
+  private renderConfigInfo = () => {
+    const { classes, alreadyDownloaded } = this.props;
+
+    if (this.isByCurrentUser()) {
+      const classname = classnames(classes.downloadedIcon, classes.createdByUserIcon);
+      if (alreadyDownloaded) {
+        <NavLink to={dashboardRoute} className={classes.navLink}>
+          <Button variant="text" size="small">
+            <DownloadedIcon className={classname} />
+            You shared this and use this
+          </Button>
+        </NavLink>;
+      }
+      return (
+        <Button variant="text">
+          <Icon className={classname}>cloud</Icon>
+          You shared this
+        </Button>
+      );
+    }
+    if (alreadyDownloaded) {
+      return (
+        <NavLink to={dashboardRoute} className={classes.navLink}>
+          <Button variant="text" size="small">
+            <DownloadedIcon className={classes.downloadedIcon} />
+            You use this config
+          </Button>
+        </NavLink>
+      );
+    }
+    return null;
   };
 }
 

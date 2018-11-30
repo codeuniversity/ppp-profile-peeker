@@ -100,6 +100,7 @@ class Profile extends React.Component<Props> {
                 size="small"
                 className={classes.action}
                 onClick={this.handleActionClick(onCopy)}
+                color="secondary"
               >
                 <Icon fontSize="small">content_copy</Icon>
               </Button>
@@ -112,6 +113,7 @@ class Profile extends React.Component<Props> {
                 size="small"
                 className={classes.action}
                 onClick={this.handleActionClick(onDelete)}
+                color="secondary"
               >
                 <Icon fontSize="small">delete</Icon>
               </Button>
@@ -127,6 +129,7 @@ class Profile extends React.Component<Props> {
                     className={classes.action}
                     onClick={this.handleActionClick(onUpload)}
                     disabled={!isLoggedIn}
+                    color="secondary"
                   >
                     <Icon fontSize="small">cloud_upload</Icon>
                   </Button>
@@ -146,7 +149,9 @@ class Profile extends React.Component<Props> {
       <Tooltip
         title={profile.definition.is_local ? "you defined this yourself" : "you downloaded this from the library"}
       >
-        <Icon className={classes.infoIcon}>{profile.definition.is_local ? "cloud_off" : "cloud_queue"}</Icon>
+        <Icon className={classes.infoIcon} color="secondary">
+          {profile.definition.is_local ? "cloud_off" : "cloud_queue"}
+        </Icon>
       </Tooltip>
     );
   };

@@ -20,7 +20,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing.unit,
     },
     typeSpan: {
-      color: theme.palette.primary.light,
+      color: theme.palette.secondary.light,
     },
     divider: {
       margin: theme.spacing.unit * 2,
@@ -82,7 +82,7 @@ class CreateScriptDialog extends React.Component<Props, State> {
         {metaElements.map(element => (
           <Grid item key={element.name}>
             <Checkbox
-              color="primary"
+              color="secondary"
               checked={this.isInFilter(element.name)}
               onChange={this.getFilterToggleForName(element.name)}
             />

@@ -20,7 +20,7 @@ const Stars: React.SFC<Props> = props => {
     return (
       <Button
         variant={props.hasStared ? "contained" : "outlined"}
-        color={props.hasStared ? "primary" : "default"}
+        color={props.hasStared ? "secondary" : "default"}
         size="small"
         className={props.classes.button}
         onClick={onClick}

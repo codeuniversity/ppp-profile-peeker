@@ -106,14 +106,14 @@ class App extends React.Component<Props, State> {
       <Grid container spacing={16} justify={"space-around"} alignItems="center">
         <Grid item>
           <NavLink to={configSelectRoute}>
-            <Button variant="contained" color="primary" size="large">
+            <Button variant="contained" color="secondary" size="large">
               Browse the library for scripts
             </Button>
           </NavLink>
         </Grid>
 
         <Grid item>
-          <Button variant="contained" color="primary" size="large" onClick={this.openScriptDialog}>
+          <Button variant="contained" color="secondary" size="large" onClick={this.openScriptDialog}>
             Create a new script yourself
           </Button>
         </Grid>
@@ -134,7 +134,7 @@ class App extends React.Component<Props, State> {
         />
         <DialogActions>
           <Button onClick={this.closeScriptDialog}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={this.onScriptSave}>
+          <Button variant="contained" color="secondary" onClick={this.onScriptSave}>
             Save
           </Button>
         </DialogActions>
@@ -150,7 +150,7 @@ class App extends React.Component<Props, State> {
         <UploadConfigForm title={newConfigTitle} onTitleChange={this.onNewConfigTitleChange} />
         <DialogActions>
           <Button onClick={this.closeConfigDialog}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={this.onScriptUpload}>
+          <Button variant="contained" color="secondary" onClick={this.onScriptUpload}>
             Save
           </Button>
         </DialogActions>

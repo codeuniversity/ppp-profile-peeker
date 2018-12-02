@@ -1,4 +1,3 @@
-import { NotificationContextValue } from "./NotificationContext";
 import React from "react";
 
 export interface NotificationProps {

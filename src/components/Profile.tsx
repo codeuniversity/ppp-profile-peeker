@@ -18,11 +18,16 @@ import Code from "./Code";
 import withLibraryApi from "../utility/withLibraryApi";
 import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 import green from "@material-ui/core/colors/green";
-
+import classnames from "classnames";
+import blue from "@material-ui/core/colors/blue";
 const styles = (theme: Theme) =>
   createStyles({
     card: {
       height: "100%",
+      transition: "background-color 500ms",
+    },
+    highlightedCard: {
+      backgroundColor: blue[100],
     },
     container: {
       height: "100%",
@@ -53,6 +58,7 @@ type Props = WithStyles<typeof styles> &
   LibraryApiContextValue & {
     profile: ProfileState;
     id: string;
+    isHighlighted?: boolean;
     onDelete?(id: string): void;
     onCopy?(id: string): void;
     onUpload?(id: string): void;
@@ -60,9 +66,9 @@ type Props = WithStyles<typeof styles> &
 
 class Profile extends React.Component<Props> {
   public render() {
-    const { profile, classes } = this.props;
+    const { profile, classes, isHighlighted } = this.props;
     return (
-      <Paper className={classes.card}>
+      <Paper className={classnames(classes.card, isHighlighted && classes.highlightedCard)}>
         <Grid className={classes.container} container direction="column" justify="space-between">
           <Grid item>{this.renderProfileInfo()}</Grid>
           <Grid item>

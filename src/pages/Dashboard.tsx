@@ -25,6 +25,11 @@ import withLibraryApi from "../utility/withLibraryApi";
 import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 import UploadConfigForm from "../components/UploadConfigForm";
 import { namesArrayToNamesFilterString } from "../services/LibraryTypes";
+import { ShortTermStoreValue } from "../contexts/ShortTermStoreContext";
+import withShortTermStore from "../utility/withShortTermStore";
+
+export const highlightedProfileKey = "highlightedProfileId";
+
 interface State {
   scriptDialogOpen: boolean;
   newScript: string;
@@ -48,7 +53,11 @@ const styles = (theme: Theme) =>
     },
   });
 
-type Props = WithStyles<typeof styles> & ProfilerApiContextProps & NotificationContextValue & LibraryApiContextValue;
+type Props = WithStyles<typeof styles> &
+  ProfilerApiContextProps &
+  NotificationContextValue &
+  LibraryApiContextValue &
+  ShortTermStoreValue;
 
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -75,7 +84,7 @@ class App extends React.Component<Props, State> {
   }
 
   private renderProfiles = () => {
-    const { profiles, classes } = this.props;
+    const { profiles, classes, shortTermStore } = this.props;
     if (Object.keys(profiles).length === 0) {
       return null;
     }
@@ -86,6 +95,10 @@ class App extends React.Component<Props, State> {
             return (
               <Grid item key={id} xs={12} sm={6} md={4} lg={4} xl={2}>
                 <Profile
+                  isHighlighted={
+                    shortTermStore[highlightedProfileKey] === id ||
+                    shortTermStore[highlightedProfileKey] === profile.definition.library_id
+                  }
                   profile={profile}
                   id={id}
                   onDelete={ProfilerApi.deleteProfile}
@@ -233,4 +246,4 @@ class App extends React.Component<Props, State> {
   };
 }
 
-export default withStyles(styles)(withProfilerApi(withNotifications(withLibraryApi(App))));
+export default withStyles(styles)(withProfilerApi(withNotifications(withLibraryApi(withShortTermStore(App)))));

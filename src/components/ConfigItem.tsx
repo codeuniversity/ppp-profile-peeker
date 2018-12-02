@@ -27,6 +27,9 @@ import { ProfileDefinition } from "../services/ProfilerTypes";
 import Code from "./Code";
 import classnames from "classnames";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { ShortTermStoreValue } from "../contexts/ShortTermStoreContext";
+import withShortTermStore from "../utility/withShortTermStore";
+import { highlightedProfileKey } from "../pages/Dashboard";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,13 +67,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
-  config: Config;
-  currentUser?: UserInfo;
-  onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
-  alreadyDownloaded: boolean;
-  onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
-}
+type Props = WithStyles<typeof styles> &
+  ShortTermStoreValue & {
+    config: Config;
+    currentUser?: UserInfo;
+    onVoteToggle?: (configId: string, shouldDelete: boolean) => Promise<void>;
+    alreadyDownloaded: boolean;
+    onDownload: (profileDefinition: ProfileDefinition) => Promise<void>;
+  };
 
 interface State {}
 
@@ -187,7 +191,7 @@ class ConfigItem extends React.Component<Props, State> {
       const classname = classnames(classes.downloadedIcon, classes.createdByUserIcon);
       if (alreadyDownloaded) {
         return (
-          <NavLink to={dashboardRoute} className={classes.navLink}>
+          <NavLink to={dashboardRoute} className={classes.navLink} onClick={this.highlightProfileOnConfigClick}>
             <Button variant="text" size="small">
               <DownloadedIcon className={classname} />
               You shared this and use this
@@ -204,7 +208,7 @@ class ConfigItem extends React.Component<Props, State> {
     }
     if (alreadyDownloaded) {
       return (
-        <NavLink to={dashboardRoute} className={classes.navLink}>
+        <NavLink to={dashboardRoute} className={classes.navLink} onClick={this.highlightProfileOnConfigClick}>
           <Button variant="text" size="small">
             <DownloadedIcon className={classes.downloadedIcon} />
             You use this config
@@ -236,6 +240,10 @@ class ConfigItem extends React.Component<Props, State> {
       </div>
     );
   };
+  private highlightProfileOnConfigClick = () => {
+    const { setShortTermValue, config } = this.props;
+    setShortTermValue(highlightedProfileKey, config.id, 2500, 500);
+  };
 }
 
-export default withStyles(styles)(ConfigItem);
+export default withStyles(styles)(withShortTermStore(ConfigItem));

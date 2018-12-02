@@ -30,6 +30,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ShortTermStoreValue } from "../contexts/ShortTermStoreContext";
 import withShortTermStore from "../utility/withShortTermStore";
 import { highlightedProfileKey } from "../pages/Dashboard";
+import blue from "@material-ui/core/colors/blue";
+
+export const highlightedConfigKey = "highlightedConfigId";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,6 +41,10 @@ const styles = (theme: Theme) =>
       height: "100%",
       overflowX: "hidden",
     },
+    highlightedPaper: {
+      backgroundColor: blue[100],
+    },
+
     container: {
       height: "100%",
       width: "100%",
@@ -64,6 +71,7 @@ const styles = (theme: Theme) =>
     expansionPanelRoot: {
       padding: 0,
       margin: 0,
+      backgroundColor: "transparent",
     },
   });
 
@@ -85,9 +93,10 @@ class ConfigItem extends React.Component<Props, State> {
   }
 
   public render() {
-    const { config, classes, alreadyDownloaded } = this.props;
+    const { config, classes, alreadyDownloaded, shortTermStore } = this.props;
+    const isHighlighted = shortTermStore[highlightedConfigKey] === config.id;
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classnames(classes.paper, isHighlighted && classes.highlightedPaper)}>
         <Grid className={classes.container} container direction="column" justify="space-between">
           <Grid item style={{ width: "100%" }}>
             <Grid container justify="space-between">

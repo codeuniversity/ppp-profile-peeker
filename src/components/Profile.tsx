@@ -12,6 +12,7 @@ import {
   Grid,
   Button,
   Tooltip,
+  IconButton,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import Code from "./Code";
@@ -20,6 +21,11 @@ import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
 import green from "@material-ui/core/colors/green";
 import classnames from "classnames";
 import blue from "@material-ui/core/colors/blue";
+import { NavLink } from "react-router-dom";
+import { configSelectRoute } from "./Routes";
+import withShortTermStore from "../utility/withShortTermStore";
+import { ShortTermStoreValue } from "../contexts/ShortTermStoreContext";
+import { highlightedConfigKey } from "./ConfigItem";
 const styles = (theme: Theme) =>
   createStyles({
     card: {
@@ -55,7 +61,8 @@ const styles = (theme: Theme) =>
   });
 
 type Props = WithStyles<typeof styles> &
-  LibraryApiContextValue & {
+  LibraryApiContextValue &
+  ShortTermStoreValue & {
     profile: ProfileState;
     id: string;
     isHighlighted?: boolean;
@@ -156,21 +163,45 @@ class Profile extends React.Component<Props> {
     if (profile.definition.library_id) {
       return (
         <Tooltip title="You shared this">
-          <Icon className={classes.infoShared} color="secondary">
-            cloud_upload
+          <span>
+            <NavLink to={configSelectRoute} onClick={this.highlightConfigOnProfileClick}>
+              <IconButton>
+                <Icon className={classes.infoShared} color="secondary">
+                  cloud_upload
+                </Icon>
+              </IconButton>
+            </NavLink>
+          </span>
+        </Tooltip>
+      );
+    }
+    if (profile.definition.is_local) {
+      return (
+        <Tooltip title="you defined this yourself">
+          <Icon className={classes.infoIcon} color="secondary">
+            cloud_off
           </Icon>
         </Tooltip>
       );
     }
     return (
-      <Tooltip
-        title={profile.definition.is_local ? "you defined this yourself" : "you downloaded this from the library"}
-      >
-        <Icon className={classes.infoIcon} color="secondary">
-          {profile.definition.is_local ? "cloud_off" : "cloud_queue"}
-        </Icon>
+      <Tooltip title="you downloaded this from the library">
+        <span>
+          <NavLink to={configSelectRoute} onClick={this.highlightConfigOnProfileClick}>
+            <IconButton>
+              <Icon className={classes.infoIcon} color="secondary">
+                cloud_queue
+              </Icon>
+            </IconButton>
+          </NavLink>
+        </span>
       </Tooltip>
     );
+  };
+
+  private highlightConfigOnProfileClick = () => {
+    const { setShortTermValue, profile } = this.props;
+    setShortTermValue(highlightedConfigKey, profile.definition.id, 2500, 500);
   };
 
   private handleActionClick = (action: (id: string) => void) => {
@@ -181,4 +212,4 @@ class Profile extends React.Component<Props> {
   };
 }
 
-export default withStyles(styles)(withLibraryApi(Profile));
+export default withStyles(styles)(withLibraryApi(withShortTermStore(Profile)));

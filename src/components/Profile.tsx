@@ -13,6 +13,9 @@ import {
   Button,
   Tooltip,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import Code from "./Code";
@@ -58,6 +61,13 @@ const styles = (theme: Theme) =>
     infoShared: {
       color: green[600],
     },
+    deleteButton: {
+      backgroundColor: red[700],
+      color: theme.palette.primary.contrastText,
+      "&:hover": {
+        backgroundColor: red[900],
+      },
+    },
   });
 
 type Props = WithStyles<typeof styles> &
@@ -71,7 +81,18 @@ type Props = WithStyles<typeof styles> &
     onUpload?(id: string): void;
   };
 
-class Profile extends React.Component<Props> {
+interface State {
+  deleteDialogOpen: boolean;
+}
+
+class Profile extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      deleteDialogOpen: false,
+    };
+  }
   public render() {
     const { profile, classes, isHighlighted } = this.props;
     return (
@@ -97,11 +118,42 @@ class Profile extends React.Component<Props> {
             ) : null}
             <Divider className={classes.divider} />
             {this.renderActionBar()}
+            {this.renderDeleteDialog()}
           </Grid>
         </Grid>
       </Paper>
     );
   }
+
+  private renderDeleteDialog = () => {
+    const { deleteDialogOpen } = this.state;
+    const { onDelete, classes } = this.props;
+
+    return (
+      <Dialog open={deleteDialogOpen} onClose={this.closeDeleteDialog}>
+        <DialogTitle> Are you sure you want to delete this profile?</DialogTitle>
+        <DialogActions>
+          <Button onClick={this.closeDeleteDialog}>Cancel</Button>
+          <Button
+            variant="contained"
+            className={classes.deleteButton}
+            classes={{}}
+            onClick={this.handleActionClick(onDelete!)}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  private closeDeleteDialog = () => {
+    this.setState({ deleteDialogOpen: false });
+  };
+
+  private openDeleteDialog = () => {
+    this.setState({ deleteDialogOpen: true });
+  };
 
   private renderActionBar = () => {
     const { classes, onDelete, onCopy, onUpload, profile, isLoggedIn } = this.props;
@@ -127,7 +179,7 @@ class Profile extends React.Component<Props> {
                 variant="outlined"
                 size="small"
                 className={classes.action}
-                onClick={this.handleActionClick(onDelete)}
+                onClick={this.openDeleteDialog}
                 color="secondary"
               >
                 <Icon fontSize="small">delete</Icon>

@@ -36,6 +36,7 @@ interface State {
   newFilter: Filter;
   configDialogOpenForId: undefined | string;
   newConfigTitle: string;
+  newConfigDescription: string;
 }
 
 const initialFilter = Object.freeze({ names: [] });
@@ -67,6 +68,7 @@ class App extends React.Component<Props, State> {
       newScript: "",
       newFilter: initialFilter,
       newConfigTitle: "",
+      newConfigDescription: "",
       configDialogOpenForId: undefined,
     };
   }
@@ -156,14 +158,19 @@ class App extends React.Component<Props, State> {
   };
 
   private renderUploadScriptDialog = () => {
-    const { configDialogOpenForId, newConfigTitle } = this.state;
+    const { configDialogOpenForId, newConfigTitle, newConfigDescription } = this.state;
     return (
       <Dialog open={configDialogOpenForId !== undefined} onClose={this.closeScriptDialog}>
         <DialogTitle> Share your script with others</DialogTitle>
-        <UploadConfigForm title={newConfigTitle} onTitleChange={this.onNewConfigTitleChange} />
+        <UploadConfigForm
+          title={newConfigTitle}
+          description={newConfigDescription}
+          onTitleChange={this.onNewConfigTitleChange}
+          onDescriptionChange={this.onNewConfigDescriptionChange}
+        />
         <DialogActions>
           <Button onClick={this.closeConfigDialog}>Cancel</Button>
-          <Button variant="contained" color="secondary" onClick={this.onScriptUpload}>
+          <Button variant="contained" color="secondary" onClick={this.onScriptUpload} disabled={!newConfigTitle}>
             Save
           </Button>
         </DialogActions>
@@ -176,7 +183,7 @@ class App extends React.Component<Props, State> {
   };
 
   private closeConfigDialog = () => {
-    this.setState({ configDialogOpenForId: undefined, newConfigTitle: "" });
+    this.setState({ configDialogOpenForId: undefined, newConfigTitle: "", newConfigDescription: "" });
   };
 
   private closeScriptDialog = () => {
@@ -193,6 +200,10 @@ class App extends React.Component<Props, State> {
 
   private onNewConfigTitleChange = (newConfigTitle: string) => {
     this.setState({ newConfigTitle });
+  };
+
+  private onNewConfigDescriptionChange = (newConfigDescription: string) => {
+    this.setState({ newConfigDescription });
   };
 
   private handleProfileCopyClick = (id: string) => {
@@ -226,12 +237,13 @@ class App extends React.Component<Props, State> {
 
   private onScriptUpload = async () => {
     const { addNotification, removeNotification, libraryApi, profiles } = this.props;
-    const { configDialogOpenForId, newConfigTitle } = this.state;
+    const { configDialogOpenForId, newConfigTitle, newConfigDescription } = this.state;
     this.closeConfigDialog();
     const notificationId = addNotification({ message: "Uploading Script...", type: "success" });
     const profile = profiles[configDialogOpenForId!];
     const configOrUndefined = await libraryApi.postConfig({
       title: newConfigTitle,
+      description: newConfigDescription,
       script: profile.definition.eval_script,
       names_filter: namesArrayToNamesFilterString(profile.definition.filter.names),
     });

@@ -12,14 +12,31 @@ import {
   Grid,
   Button,
   Tooltip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import Code from "./Code";
-
+import withLibraryApi from "../utility/withLibraryApi";
+import { LibraryApiContextValue } from "../contexts/LibraryApiContext";
+import green from "@material-ui/core/colors/green";
+import classnames from "classnames";
+import blue from "@material-ui/core/colors/blue";
+import { NavLink } from "react-router-dom";
+import { configSelectRoute } from "./Routes";
+import withShortTermStore from "../utility/withShortTermStore";
+import { ShortTermStoreValue } from "../contexts/ShortTermStoreContext";
+import { highlightedConfigKey } from "./ConfigItem";
 const styles = (theme: Theme) =>
   createStyles({
     card: {
       height: "100%",
+      transition: "background-color 500ms",
+    },
+    highlightedCard: {
+      backgroundColor: blue[100],
     },
     container: {
       height: "100%",
@@ -41,20 +58,45 @@ const styles = (theme: Theme) =>
     infoIcon: {
       cursor: "pointer",
     },
+    infoShared: {
+      color: green[600],
+    },
+    deleteButton: {
+      backgroundColor: red[700],
+      color: theme.palette.primary.contrastText,
+      "&:hover": {
+        backgroundColor: red[900],
+      },
+    },
   });
 
-interface Props extends WithStyles<typeof styles> {
-  profile: ProfileState;
-  id: string;
-  onDelete?(id: string): void;
-  onCopy?(id: string): void;
+type Props = WithStyles<typeof styles> &
+  LibraryApiContextValue &
+  ShortTermStoreValue & {
+    profile: ProfileState;
+    id: string;
+    isHighlighted?: boolean;
+    onDelete?(id: string): void;
+    onCopy?(id: string): void;
+    onUpload?(id: string): void;
+  };
+
+interface State {
+  deleteDialogOpen: boolean;
 }
 
-class Profile extends React.Component<Props> {
+class Profile extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      deleteDialogOpen: false,
+    };
+  }
   public render() {
-    const { profile, classes } = this.props;
+    const { profile, classes, isHighlighted } = this.props;
     return (
-      <Paper className={classes.card}>
+      <Paper className={classnames(classes.card, isHighlighted && classes.highlightedCard)}>
         <Grid className={classes.container} container direction="column" justify="space-between">
           <Grid item>{this.renderProfileInfo()}</Grid>
           <Grid item>
@@ -68,9 +110,7 @@ class Profile extends React.Component<Props> {
 
             {profile.display.error ? (
               <>
-                <Typography variant="body1">
-                  <Code display="block">{profile.definition.eval_script}</Code>
-                </Typography>
+                <Code fullWidth>{profile.definition.eval_script}</Code>
                 <Typography variant="body2" color="secondary" className={classes.errorText}>
                   {profile.display.error}
                 </Typography>
@@ -78,27 +118,92 @@ class Profile extends React.Component<Props> {
             ) : null}
             <Divider className={classes.divider} />
             {this.renderActionBar()}
+            {this.renderDeleteDialog()}
           </Grid>
         </Grid>
       </Paper>
     );
   }
 
+  private renderDeleteDialog = () => {
+    const { deleteDialogOpen } = this.state;
+    const { onDelete, classes } = this.props;
+
+    return (
+      <Dialog open={deleteDialogOpen} onClose={this.closeDeleteDialog}>
+        <DialogTitle> Are you sure you want to delete this profile?</DialogTitle>
+        <DialogActions>
+          <Button onClick={this.closeDeleteDialog}>Cancel</Button>
+          <Button
+            variant="contained"
+            className={classes.deleteButton}
+            classes={{}}
+            onClick={this.handleActionClick(onDelete!)}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  private closeDeleteDialog = () => {
+    this.setState({ deleteDialogOpen: false });
+  };
+
+  private openDeleteDialog = () => {
+    this.setState({ deleteDialogOpen: true });
+  };
+
   private renderActionBar = () => {
-    const { classes, onDelete, onCopy } = this.props;
-    if (onDelete || onCopy) {
+    const { classes, onDelete, onCopy, onUpload, profile, isLoggedIn } = this.props;
+    if (onDelete || onCopy || onUpload) {
       return (
         <div>
           {onCopy && (
-            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleCopyClick}>
-              <Icon fontSize="small">content_copy</Icon>
-            </Button>
+            <Tooltip title="copy">
+              <Button
+                variant="outlined"
+                size="small"
+                className={classes.action}
+                onClick={this.handleActionClick(onCopy)}
+                color="secondary"
+              >
+                <Icon fontSize="small">content_copy</Icon>
+              </Button>
+            </Tooltip>
           )}
           {onDelete && (
-            <Button variant="outlined" size="small" className={classes.action} onClick={this.handleDeleteClick}>
-              <Icon fontSize="small">delete</Icon>
-            </Button>
+            <Tooltip title="delete">
+              <Button
+                variant="outlined"
+                size="small"
+                className={classes.action}
+                onClick={this.openDeleteDialog}
+                color="secondary"
+              >
+                <Icon fontSize="small">delete</Icon>
+              </Button>
+            </Tooltip>
           )}
+          {onUpload &&
+            profile.definition.is_local &&
+            !profile.display.error && (
+              <Tooltip title={!isLoggedIn ? "you need to be logged in" : "share with others"}>
+                <span>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    className={classes.action}
+                    onClick={this.handleActionClick(onUpload)}
+                    disabled={!isLoggedIn}
+                    color="secondary"
+                  >
+                    <Icon fontSize="small">cloud_upload</Icon>
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
         </div>
       );
     }
@@ -107,29 +212,56 @@ class Profile extends React.Component<Props> {
 
   private renderProfileInfo = () => {
     const { profile, classes } = this.props;
-
+    if (profile.definition.library_id) {
+      return (
+        <Tooltip title="You shared this">
+          <span>
+            <NavLink to={configSelectRoute} onClick={this.highlightConfigOnProfileClick}>
+              <IconButton>
+                <Icon className={classes.infoShared} color="secondary">
+                  cloud_upload
+                </Icon>
+              </IconButton>
+            </NavLink>
+          </span>
+        </Tooltip>
+      );
+    }
+    if (profile.definition.is_local) {
+      return (
+        <Tooltip title="you defined this yourself">
+          <Icon className={classes.infoIcon} color="secondary">
+            cloud_off
+          </Icon>
+        </Tooltip>
+      );
+    }
     return (
-      <Tooltip
-        title={profile.definition.is_local ? "you defined this yourself" : "you downloaded this from the library"}
-      >
-        <Icon className={classes.infoIcon}>{profile.definition.is_local ? "cloud_off" : "cloud_queue"}</Icon>
+      <Tooltip title="you downloaded this from the library">
+        <span>
+          <NavLink to={configSelectRoute} onClick={this.highlightConfigOnProfileClick}>
+            <IconButton>
+              <Icon className={classes.infoIcon} color="secondary">
+                cloud_queue
+              </Icon>
+            </IconButton>
+          </NavLink>
+        </span>
       </Tooltip>
     );
   };
 
-  private handleDeleteClick = () => {
-    const { onDelete, id } = this.props;
-    if (onDelete) {
-      onDelete(id);
-    }
+  private highlightConfigOnProfileClick = () => {
+    const { setShortTermValue, profile } = this.props;
+    setShortTermValue(highlightedConfigKey, profile.definition.library_id || profile.definition.id, 2500, 500);
   };
 
-  private handleCopyClick = () => {
-    const { onCopy, id } = this.props;
-    if (onCopy) {
-      onCopy(id);
-    }
+  private handleActionClick = (action: (id: string) => void) => {
+    return () => {
+      const { id } = this.props;
+      action(id);
+    };
   };
 }
 
-export default withStyles(styles)(Profile);
+export default withStyles(styles)(withLibraryApi(withShortTermStore(Profile)));

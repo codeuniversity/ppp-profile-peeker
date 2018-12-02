@@ -3,6 +3,7 @@ export interface ProfileDefinition {
   eval_script: string;
   is_local: boolean;
   filter: Filter;
+  library_id?: string;
 }
 
 export interface ProfileState {

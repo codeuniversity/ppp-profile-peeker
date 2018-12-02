@@ -52,12 +52,13 @@ class ConfigSelect extends React.Component<Props, State> {
     const state = this.state;
     if (isLoaded(state)) {
       const { configs } = state;
-      const { profileExists } = this.props;
+      const { profileExists, currentUser } = this.props;
       return (
         <ConfigList
           configs={configs}
           onVoteToggle={this.onVoteHandler()}
           profileExists={profileExists}
+          currentUser={currentUser}
           onDownload={ProfilerApi.postProfile}
         />
       );

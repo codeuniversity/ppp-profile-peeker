@@ -6,6 +6,7 @@ import LibraryApiProvider from "./contexts/LibraryApiProvider";
 import ProfilerApiProvider from "./contexts/ProfilerApiProvider";
 import NotificationProvider from "./contexts/NotificationProvider";
 import { BrowserRouter as Router } from "react-router-dom";
+import ShortTermStoreProvider from "./contexts/ShortTermStoreProvider";
 
 interface AppProps {}
 
@@ -20,13 +21,15 @@ export default class App extends React.Component<AppProps> {
         <CssBaseline />
         <MuiThemeProvider theme={theme}>
           <Router>
-            <NotificationProvider>
-              <ProfilerApiProvider>
-                <LibraryApiProvider>
-                  <Routes />
-                </LibraryApiProvider>
-              </ProfilerApiProvider>
-            </NotificationProvider>
+            <ShortTermStoreProvider>
+              <NotificationProvider>
+                <ProfilerApiProvider>
+                  <LibraryApiProvider>
+                    <Routes />
+                  </LibraryApiProvider>
+                </ProfilerApiProvider>
+              </NotificationProvider>
+            </ShortTermStoreProvider>
           </Router>
         </MuiThemeProvider>
       </>

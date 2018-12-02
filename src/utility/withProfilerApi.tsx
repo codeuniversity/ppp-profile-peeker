@@ -8,7 +8,9 @@ export interface ProfilerApiContextProps extends ProfilerApiContextValue {
 
 function getProfileExists(profiles: { [id: string]: ProfileState }) {
   return (profileIdToCheck: string) => {
-    return Object.keys(profiles).find(profileId => profileId === profileIdToCheck) !== undefined;
+    return Object.entries(profiles).some(
+      ([profileId, profile]) => profileId === profileIdToCheck || profile.definition.library_id === profileIdToCheck,
+    );
   };
 }
 

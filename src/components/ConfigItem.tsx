@@ -225,7 +225,9 @@ class ConfigItem extends React.Component<Props, State> {
 
     return (
       <div>
-        <Typography variant="caption">This script processes signal</Typography>
+        <Typography variant="caption" style={{ display: "inline-block" }}>
+          This script processes signal
+        </Typography>
         {filterNames.map(name => (
           <Code key={name} margin="8px">
             {name}

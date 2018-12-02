@@ -122,7 +122,8 @@ class Profile extends React.Component<Props> {
             </Tooltip>
           )}
           {onUpload &&
-            profile.definition.is_local && (
+            profile.definition.is_local &&
+            !profile.display.error && (
               <Tooltip title={!isLoggedIn ? "you need to be logged in" : "share with others"}>
                 <span>
                   <Button

@@ -201,7 +201,7 @@ class Profile extends React.Component<Props> {
 
   private highlightConfigOnProfileClick = () => {
     const { setShortTermValue, profile } = this.props;
-    setShortTermValue(highlightedConfigKey, profile.definition.id, 2500, 500);
+    setShortTermValue(highlightedConfigKey, profile.definition.library_id || profile.definition.id, 2500, 500);
   };
 
   private handleActionClick = (action: (id: string) => void) => {

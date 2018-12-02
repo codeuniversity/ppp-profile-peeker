@@ -40,11 +40,11 @@ const styles = (theme: Theme) =>
       padding: 2 * theme.spacing.unit,
       height: "100%",
       overflowX: "hidden",
+      transition: "background-color 500ms",
     },
     highlightedPaper: {
       backgroundColor: blue[100],
     },
-
     container: {
       height: "100%",
       width: "100%",

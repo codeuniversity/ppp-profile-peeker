@@ -180,9 +180,10 @@ class ConfigItem extends React.Component<Props, State> {
   };
 
   private starsClickHandler = () => {
-    const { onVoteToggle, config } = this.props;
+    const { onVoteToggle, config, setShortTermValue } = this.props;
     if (onVoteToggle !== undefined) {
       return () => {
+        setShortTermValue(highlightedConfigKey, config.id, 2500);
         onVoteToggle(config.id, config.has_voted);
       };
     }

@@ -6,11 +6,16 @@ const styles = (theme: Theme) =>
     container: {
       padding: theme.spacing.unit,
     },
+    input: {
+      marginTop: 2 * theme.spacing.unit,
+    },
   });
 
 interface Props extends WithStyles<typeof styles> {
   title: string;
   onTitleChange: (newTitle: string) => void;
+  description: string;
+  onDescriptionChange: (newDescription: string) => void;
 }
 
 interface State {}
@@ -22,10 +27,26 @@ class UploadConfigForm extends React.Component<Props, State> {
   }
 
   public render() {
-    const { title, classes } = this.props;
+    const { title, description, classes } = this.props;
     return (
       <div className={classes.container}>
-        <TextField label="Title" value={title} onChange={this.onTitleChange} variant="outlined" fullWidth />
+        <TextField
+          className={classes.input}
+          label="Title"
+          value={title}
+          onChange={this.onTitleChange}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          className={classes.input}
+          label="Description"
+          value={description}
+          onChange={this.onDescriptionChange}
+          variant="outlined"
+          fullWidth
+          multiline
+        />
       </div>
     );
   }
@@ -33,6 +54,11 @@ class UploadConfigForm extends React.Component<Props, State> {
   private onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { onTitleChange } = this.props;
     onTitleChange(e.target.value);
+  };
+
+  private onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { onDescriptionChange } = this.props;
+    onDescriptionChange(e.target.value);
   };
 }
 export default withStyles(styles)(UploadConfigForm);

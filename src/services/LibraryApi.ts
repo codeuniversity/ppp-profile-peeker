@@ -1,6 +1,6 @@
 import { LibraryCredentials, Config, Vote, UserInfo, ConfigPostAttributes } from "./LibraryTypes";
 
-const libraryUrl = "http://localhost:3000";
+const libraryUrl = process.env.REACT_APP_LIBRARY_API;
 
 const authCredentialsKey = "authCredentials";
 type Handler = () => void;

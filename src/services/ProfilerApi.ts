@@ -1,9 +1,8 @@
 import { ProfileDefinition } from "../services/ProfilerTypes";
 import { Without } from "./../utility/Without";
 import { Message, isProfileUpdate, ProfileState, RawMetaElement } from "./ProfilerTypes";
-const profilerLocation = "localhost:4000";
-const profilerHttpUrl = `http://${profilerLocation}`;
-const profilerWsUrl = `ws://${profilerLocation}`;
+const profilerHttpUrl = process.env.REACT_APP_PROFILER_API_HTTP as string;
+const profilerWsUrl = process.env.REACT_APP_PROFILER_API_WS as string;
 
 type ProfileUpdateHandler = (profileId: string, profileState: ProfileState) => void;
 type ProfileDeleteHandler = (profileId: string) => void;

@@ -1,3 +1,14 @@
+## Quick Setup
+`cp .development.env .env`
+
+assuming you have [yarn](https://yarnpkg.com)
+`make dev run`
+
+This project makes calls to the [profiler](https://github.com/codeuniversity/ppp-profiler) and the [library](https://github.com/codeuniversity/ppp-library-api). 
+If you changed the default address or run them on another host, change the address in the `.env` file.
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
